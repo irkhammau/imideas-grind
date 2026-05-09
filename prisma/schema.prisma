@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SiteSettings {
+  id           String   @id @default(cuid())
+  companyName  String
+  tagline      String
+  contact      Json
+  aboutText    String   @db.Text
+  youtubeUrl   String
+  instagramUrl String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Staff {
+  id        String   @id @default(uuid())
+  name      String
+  position  String
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id        String         @id @default(uuid())
+  eventName String
+  logo      String
+  location  String
+  date      DateTime
+  galleries EventGallery[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model EventGallery {
+  id        String   @id @default(uuid())
+  eventId   String
+  imageUrl  String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+model GlobalGallery {
+  id         String   @id @default(uuid())
+  imageUrl   String
+  caption    String?
+  uploadedAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      String   @default("SuperAdmin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
