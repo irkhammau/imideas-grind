@@ -3,6 +3,9 @@ import Link from "next/link";
 import { FadeIn, HoverCard } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function HomePage() {
   const [settings, staff, services, featuredEvents] = await Promise.all([
     prisma.siteSettings.findFirst({ orderBy: { createdAt: "asc" } }),

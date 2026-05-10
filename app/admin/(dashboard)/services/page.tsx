@@ -2,6 +2,9 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { createServiceAction, deleteServiceAction, updateServiceAction } from "@/app/admin/actions";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function ServicesPage() {
   const services = await prisma.service.findMany({ orderBy: { createdAt: "desc" } });
 

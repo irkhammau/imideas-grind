@@ -2,6 +2,9 @@ import Image from "next/image";
 import { FadeIn, HoverCard } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function GlobalGalleryPage() {
   const galleries = await prisma.globalGallery.findMany({
     orderBy: { uploadedAt: "desc" }

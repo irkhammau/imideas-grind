@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function AdminOverviewPage() {
   const [staffCount, servicesCount, eventsCount, globalGalleryCount, userCount] = await Promise.all([
     prisma.staff.count(),

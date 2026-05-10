@@ -3,6 +3,9 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { createStaffAction, deleteStaffAction, updateStaffAction } from "@/app/admin/actions";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function StaffPage() {
   const staff = await prisma.staff.findMany({
     orderBy: [{ order: "asc" }, { createdAt: "asc" }]

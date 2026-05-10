@@ -2,6 +2,9 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { createGlobalGalleryAction, deleteGlobalGalleryAction, updateGlobalGalleryAction } from "@/app/admin/actions";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function GlobalGalleriesPage() {
   const galleries = await prisma.globalGallery.findMany({ orderBy: { uploadedAt: "desc" } });
 

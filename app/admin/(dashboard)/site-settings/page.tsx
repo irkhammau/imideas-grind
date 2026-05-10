@@ -2,6 +2,9 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { prisma } from "@/lib/prisma";
 import { updateSiteSettingsAction } from "@/app/admin/actions";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function SiteSettingsPage() {
   const settings = await prisma.siteSettings.findFirst({ orderBy: { createdAt: "asc" } });
   const contact = (settings?.contact as { email?: string; phone?: string; address?: string } | null) ?? {};
