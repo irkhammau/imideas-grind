@@ -1,12 +1,9 @@
 import Image from "next/image";
-import type { Event, EventGallery } from "@prisma/client";
 import { FadeIn } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
 
 export default async function EventsPage() {
-  type EventWithGalleries = Event & { galleries: EventGallery[] };
-
-  const events: EventWithGalleries[] = await prisma.event.findMany({
+  const events = await prisma.event.findMany({
     orderBy: { date: "desc" },
     include: {
       galleries: {
@@ -21,7 +18,7 @@ export default async function EventsPage() {
         <h1 className="font-heading text-4xl">Event Portfolio</h1>
       </FadeIn>
       <div className="mt-8 space-y-8">
-        {events.map((event: EventWithGalleries, index: number) => (
+        {events.map((event, index) => (
           <FadeIn key={event.id} delay={index * 0.08}>
             <article className="rounded-3xl border border-grind-line bg-grind-surface p-5 md:p-6">
               <div className="grid gap-6 md:grid-cols-[1fr_1.2fr]">
@@ -38,7 +35,7 @@ export default async function EventsPage() {
                 <div>
                   <p className="mb-3 text-sm uppercase tracking-[0.18em] text-zinc-400">Galeri Event</p>
                   <div className="grid grid-cols-2 gap-3">
-                    {event.galleries.map((gallery: EventGallery) => (
+                    {event.galleries.map((gallery) => (
                       <figure key={gallery.id} className="rounded-xl border border-grind-line bg-[#0f0f0f] p-2">
                         <div className="relative h-32 overflow-hidden rounded-lg bg-black sm:h-40">
                           <Image
