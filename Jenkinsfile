@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'imideas-grind:latest'
         DOCKER_NETWORK = 'imideas-net'
 
-        DATABASE_URL = 'mysql://root:P@ssw0rd@mysql-lab:3306/grind_db'
+        DATABASE_URL = 'mysql://root:P%40ssw0rd@mysql-lab:3306/grind_db'
         NEXTAUTH_URL = 'https://grind.imideas.my.id'
         NEXTAUTH_SECRET = 'gtZoGuDkMNrAVN1tPfVDfBeu2i7+HU8th1XpC8gLOB4='
     }
@@ -30,9 +30,11 @@ pipeline {
             steps {
                 sh '''
                     docker run --rm \
-                    --network imideas-net \
-                    --env-file /opt/imideas/env/imideas-grind.env \
-                    imideas-grind:latest \
+                    --network $DOCKER_NETWORK \
+                    -e DATABASE_URL="$DATABASE_URL" \
+                    -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+                    -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
+                    $DOCKER_IMAGE \
                     npx prisma migrate deploy
                 '''
             }
@@ -42,9 +44,11 @@ pipeline {
             steps {
                 sh '''
                     docker run --rm \
-                    --network imideas-net \
-                    --env-file /opt/imideas/env/imideas-grind.env \
-                    imideas-grind:latest \
+                    --network $DOCKER_NETWORK \
+                    -e DATABASE_URL="$DATABASE_URL" \
+                    -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+                    -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
+                    $DOCKER_IMAGE \
                     npx prisma db seed
                 '''
             }
@@ -53,15 +57,17 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    docker stop imideas-grind || true
-                    docker rm imideas-grind || true
+                    docker stop $APP_NAME || true
+                    docker rm $APP_NAME || true
 
                     docker run -d \
-                    --name imideas-grind \
+                    --name $APP_NAME \
                     --restart unless-stopped \
-                    --network imideas-net \
-                    --env-file /opt/imideas/env/imideas-grind.env \
-                    imideas-grind:latest
+                    --network $DOCKER_NETWORK \
+                    -e DATABASE_URL="$DATABASE_URL" \
+                    -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+                    -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
+                    $DOCKER_IMAGE
                 '''
             }
         }

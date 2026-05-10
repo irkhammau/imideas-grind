@@ -2,6 +2,8 @@ import { Footer } from "@/components/public/footer";
 import { Navbar } from "@/components/public/navbar";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await prisma.siteSettings.findFirst({ orderBy: { createdAt: "asc" } });
 

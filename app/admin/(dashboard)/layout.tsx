@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 const navItems = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/site-settings", label: "Site Settings" },
