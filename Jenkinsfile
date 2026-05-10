@@ -26,21 +26,42 @@ pipeline {
             }
         }
 
+        stage('Run Migration') {
+            steps {
+                sh '''
+                    docker run --rm \
+                    --network imideas-net \
+                    --env-file /opt/imideas/env/imideas-grind.env \
+                    imideas-grind:latest \
+                    npx prisma migrate deploy
+                '''
+            }
+        }
+
+        stage('Run Seed') {
+            steps {
+                sh '''
+                    docker run --rm \
+                    --network imideas-net \
+                    --env-file /opt/imideas/env/imideas-grind.env \
+                    imideas-grind:latest \
+                    npx prisma db seed
+                '''
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh '''
-                    docker stop $APP_NAME || true
-                    docker rm $APP_NAME || true
+                    docker stop imideas-grind || true
+                    docker rm imideas-grind || true
 
                     docker run -d \
-                      --name $APP_NAME \
-                      --restart unless-stopped \
-                      --network $DOCKER_NETWORK \
-                      -e DATABASE_URL="$DATABASE_URL" \
-                      -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-                      -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
-                      -e NODE_ENV=production \
-                      $DOCKER_IMAGE
+                    --name imideas-grind \
+                    --restart unless-stopped \
+                    --network imideas-net \
+                    --env-file /opt/imideas/env/imideas-grind.env \
+                    imideas-grind:latest
                 '''
             }
         }
