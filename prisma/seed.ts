@@ -53,24 +53,28 @@ async function main() {
   await prisma.staff.createMany({
     data: [
       {
+        order: 1,
         name: "Ir. Emmanuel Pinayungan",
         position: "Direktur Utama",
-        image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80"
+        image: "/logo.png"
       },
       {
+        order: 2,
         name: "Ongko Leksono",
         position: "Direktur Keuangan",
-        image: "https://images.unsplash.com/photo-1600275669439-14e40452d20b?auto=format&fit=crop&w=1200&q=80"
+        image: "/logo.png"
       },
       {
+        order: 3,
         name: "Felix Erman Yudi",
         position: "Direktur Marketing dan Development",
-        image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=1200&q=80"
+        image: "/logo.png"
       },
       {
+        order: 4,
         name: "Krisna Murtian Utama Jati",
         position: "Direktur Operasional dan Human Resource",
-        image: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=1200&q=80"
+        image: "/logo.png"
       }
     ]
   });
@@ -78,7 +82,7 @@ async function main() {
   const event = await prisma.event.create({
     data: {
       eventName: "GRIND Sportainment Championship 2026",
-      logo: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80",
+      logo: "/logo.png",
       location: "Yogyakarta",
       date: new Date("2026-02-14T00:00:00.000Z")
     }
@@ -88,12 +92,12 @@ async function main() {
     data: [
       {
         eventId: event.id,
-        imageUrl: "https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=1600&q=80",
+        imageUrl: "/logo.png",
         caption: "Pembukaan acara"
       },
       {
         eventId: event.id,
-        imageUrl: "https://images.unsplash.com/photo-1518604666860-9ed391f76460?auto=format&fit=crop&w=1600&q=80",
+        imageUrl: "/logo.png",
         caption: "Atmosfer pertandingan"
       }
     ]
@@ -102,11 +106,11 @@ async function main() {
   await prisma.globalGallery.createMany({
     data: [
       {
-        imageUrl: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80",
+        imageUrl: "/logo.png",
         caption: "Tim produksi saat persiapan"
       },
       {
-        imageUrl: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=1600&q=80",
+        imageUrl: "/logo.png",
         caption: "Dokumentasi sportainment"
       }
     ]

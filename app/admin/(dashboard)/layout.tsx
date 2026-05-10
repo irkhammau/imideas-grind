@@ -10,7 +10,7 @@ const navItems = [
   { href: "/admin/staff", label: "Staff" },
   { href: "/admin/services", label: "Services" },
   { href: "/admin/events", label: "Events" },
-  { href: "/admin/global-galleries", label: "Global Gallery" },
+  { href: "/admin/global-galleries", label: "Galeri Perusahaan" },
   { href: "/admin/users", label: "Users" }
 ];
 

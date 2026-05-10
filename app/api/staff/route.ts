@@ -5,7 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const staff = await prisma.staff.findMany({ orderBy: { createdAt: "desc" } });
+    const staff = await prisma.staff.findMany({
+      orderBy: [{ order: "asc" }, { createdAt: "asc" }]
+    });
     return NextResponse.json(staff);
   } catch (error) {
     return handleApiError(error);

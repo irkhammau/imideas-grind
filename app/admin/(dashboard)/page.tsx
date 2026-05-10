@@ -13,7 +13,7 @@ export default async function AdminOverviewPage() {
     { label: "Staff", value: staffCount },
     { label: "Services", value: servicesCount },
     { label: "Events", value: eventsCount },
-    { label: "Global Gallery", value: globalGalleryCount },
+    { label: "Galeri Perusahaan", value: globalGalleryCount },
     { label: "Users", value: userCount }
   ];
 

@@ -8,9 +8,9 @@ export default async function GlobalGalleriesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-grind-line bg-grind-surface p-6">
-        <h1 className="font-heading text-2xl">Create Global Gallery</h1>
+        <h1 className="font-heading text-2xl">Tambah Galeri Perusahaan</h1>
         <form action={createGlobalGalleryAction} className="mt-4 grid gap-3">
-          <input name="imageUrl" type="url" required placeholder="Image URL" />
+          <input name="imageFile" type="file" accept="image/*" required />
           <input name="caption" placeholder="Caption (opsional)" />
           <SubmitButton>Tambah Foto</SubmitButton>
         </form>
@@ -21,7 +21,11 @@ export default async function GlobalGalleriesPage() {
           <article key={item.id} className="rounded-2xl border border-grind-line bg-grind-surface p-4">
             <form action={updateGlobalGalleryAction} className="grid gap-3">
               <input type="hidden" name="id" value={item.id} />
-              <input name="imageUrl" defaultValue={item.imageUrl} required type="url" />
+              <input type="hidden" name="existingImageUrl" value={item.imageUrl} />
+              <div className="rounded-lg border border-grind-line bg-[#111] px-3 py-2 text-xs text-zinc-400">
+                Current image: {item.imageUrl}
+              </div>
+              <input name="imageFile" type="file" accept="image/*" />
               <input name="caption" defaultValue={item.caption ?? ""} />
               <SubmitButton>Simpan</SubmitButton>
             </form>

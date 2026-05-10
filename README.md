@@ -12,8 +12,8 @@ Aplikasi fullstack company profile dan CMS untuk PT GELORA ENERGI INDONESIA (GRI
 
 ## Fitur Utama
 
-- Public website: Hero, About, Services, Staff, Event Portfolio, Global Gallery, Contact
-- CMS `/admin`: login admin + CRUD Site Settings, Staff, Services, Events, Event Galleries, Global Galleries, Users
+- Public website: Hero, About, Services, Staff, Event Portfolio, Galeri Perusahaan, Contact
+- CMS `/admin`: login admin + CRUD Site Settings, Staff, Services, Events, Event Galleries, Galeri Perusahaan, Users
 - Tema dark dengan aksen merah dan cyan sesuai PRD
 - Struktur galeri/staff memakai crop `object-cover` + zoom proporsional (`scale-110`) dan teks diletakkan di luar area subjek gambar
 

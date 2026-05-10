@@ -10,7 +10,7 @@ export default async function GlobalGalleryPage() {
   return (
     <section className="section-container py-12">
       <FadeIn>
-        <h1 className="font-heading text-4xl">Global Gallery</h1>
+        <h1 className="font-heading text-4xl">Galeri Perusahaan</h1>
         <p className="mt-3 text-zinc-300">Dokumentasi umum perusahaan GRIND.</p>
       </FadeIn>
 

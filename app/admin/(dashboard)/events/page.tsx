@@ -21,7 +21,7 @@ export default async function EventsPage() {
         <form action={createEventAction} className="mt-4 grid gap-3 md:grid-cols-2">
           <input name="eventName" required placeholder="Nama event" />
           <input name="location" required placeholder="Lokasi" />
-          <input name="logo" required type="url" placeholder="Logo URL" className="md:col-span-2" />
+          <input name="logoFile" required type="file" accept="image/*" className="md:col-span-2" />
           <input name="date" required type="date" className="md:col-span-2" />
           <SubmitButton>Tambah Event</SubmitButton>
         </form>
@@ -32,9 +32,13 @@ export default async function EventsPage() {
           <article key={event.id} className="rounded-2xl border border-grind-line bg-grind-surface p-4">
             <form action={updateEventAction} className="grid gap-3 md:grid-cols-2">
               <input type="hidden" name="id" value={event.id} />
+              <input type="hidden" name="existingLogo" value={event.logo} />
               <input name="eventName" defaultValue={event.eventName} required />
               <input name="location" defaultValue={event.location} required />
-              <input name="logo" defaultValue={event.logo} required type="url" className="md:col-span-2" />
+              <div className="md:col-span-2 rounded-lg border border-grind-line bg-[#111] px-3 py-2 text-xs text-zinc-400">
+                Current logo: {event.logo}
+              </div>
+              <input name="logoFile" type="file" accept="image/*" className="md:col-span-2" />
               <input
                 name="date"
                 required
@@ -55,7 +59,7 @@ export default async function EventsPage() {
               <p className="mb-3 text-sm uppercase tracking-wider text-zinc-400">Gallery for {event.eventName}</p>
               <form action={createEventGalleryAction} className="grid gap-3 md:grid-cols-2">
                 <input type="hidden" name="eventId" value={event.id} />
-                <input name="imageUrl" type="url" required placeholder="Image URL" className="md:col-span-2" />
+                <input name="imageFile" type="file" accept="image/*" required className="md:col-span-2" />
                 <input name="caption" placeholder="Caption (opsional)" className="md:col-span-2" />
                 <SubmitButton>Tambah Foto</SubmitButton>
               </form>

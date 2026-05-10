@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { removePublicUpload, saveImageFromFormData } from "@/lib/upload";
 
 async function assertAuth() {
   const session = await getServerSession(authOptions);
@@ -68,12 +69,15 @@ export async function updateSiteSettingsAction(formData: FormData) {
 
 export async function createStaffAction(formData: FormData) {
   await assertAuth();
+  const image = await saveImageFromFormData(formData, "imageFile", true);
+  const order = Number(formData.get("order") ?? 0);
 
   await prisma.staff.create({
     data: {
+      order: Number.isNaN(order) ? 0 : order,
       name: String(formData.get("name") ?? ""),
       position: String(formData.get("position") ?? ""),
-      image: String(formData.get("image") ?? "")
+      image: image ?? ""
     }
   });
 
@@ -82,22 +86,34 @@ export async function createStaffAction(formData: FormData) {
 
 export async function updateStaffAction(formData: FormData) {
   await assertAuth();
+  const existingImage = String(formData.get("existingImage") ?? "");
+  const uploadedImage = await saveImageFromFormData(formData, "imageFile");
+  const image = uploadedImage ?? existingImage;
+  const order = Number(formData.get("order") ?? 0);
 
   await prisma.staff.update({
     where: { id: String(formData.get("id")) },
     data: {
+      order: Number.isNaN(order) ? 0 : order,
       name: String(formData.get("name") ?? ""),
       position: String(formData.get("position") ?? ""),
-      image: String(formData.get("image") ?? "")
+      image
     }
   });
+
+  if (uploadedImage && existingImage && uploadedImage !== existingImage) {
+    await removePublicUpload(existingImage);
+  }
 
   revalidateAll();
 }
 
 export async function deleteStaffAction(formData: FormData) {
   await assertAuth();
-  await prisma.staff.delete({ where: { id: String(formData.get("id")) } });
+  const deleted = await prisma.staff.delete({
+    where: { id: String(formData.get("id")) }
+  });
+  await removePublicUpload(deleted.image);
   revalidateAll();
 }
 
@@ -136,11 +152,12 @@ export async function deleteServiceAction(formData: FormData) {
 
 export async function createEventAction(formData: FormData) {
   await assertAuth();
+  const logo = await saveImageFromFormData(formData, "logoFile", true);
 
   await prisma.event.create({
     data: {
       eventName: String(formData.get("eventName") ?? ""),
-      logo: String(formData.get("logo") ?? ""),
+      logo: logo ?? "",
       location: String(formData.get("location") ?? ""),
       date: new Date(String(formData.get("date") ?? new Date().toISOString()))
     }
@@ -151,33 +168,52 @@ export async function createEventAction(formData: FormData) {
 
 export async function updateEventAction(formData: FormData) {
   await assertAuth();
+  const existingLogo = String(formData.get("existingLogo") ?? "");
+  const uploadedLogo = await saveImageFromFormData(formData, "logoFile");
+  const logo = uploadedLogo ?? existingLogo;
 
   await prisma.event.update({
     where: { id: String(formData.get("id")) },
     data: {
       eventName: String(formData.get("eventName") ?? ""),
-      logo: String(formData.get("logo") ?? ""),
+      logo,
       location: String(formData.get("location") ?? ""),
       date: new Date(String(formData.get("date") ?? new Date().toISOString()))
     }
   });
+
+  if (uploadedLogo && existingLogo && uploadedLogo !== existingLogo) {
+    await removePublicUpload(existingLogo);
+  }
 
   revalidateAll();
 }
 
 export async function deleteEventAction(formData: FormData) {
   await assertAuth();
-  await prisma.event.delete({ where: { id: String(formData.get("id")) } });
+  const id = String(formData.get("id"));
+  const event = await prisma.event.findUnique({
+    where: { id },
+    include: { galleries: true }
+  });
+
+  if (event) {
+    await prisma.event.delete({ where: { id } });
+    await removePublicUpload(event.logo);
+    await Promise.all(event.galleries.map((gallery) => removePublicUpload(gallery.imageUrl)));
+  }
+
   revalidateAll();
 }
 
 export async function createEventGalleryAction(formData: FormData) {
   await assertAuth();
+  const imageUrl = await saveImageFromFormData(formData, "imageFile", true);
 
   await prisma.eventGallery.create({
     data: {
       eventId: String(formData.get("eventId") ?? ""),
-      imageUrl: String(formData.get("imageUrl") ?? ""),
+      imageUrl: imageUrl ?? "",
       caption: String(formData.get("caption") ?? "") || null
     }
   });
@@ -187,16 +223,20 @@ export async function createEventGalleryAction(formData: FormData) {
 
 export async function deleteEventGalleryAction(formData: FormData) {
   await assertAuth();
-  await prisma.eventGallery.delete({ where: { id: String(formData.get("id")) } });
+  const deleted = await prisma.eventGallery.delete({
+    where: { id: String(formData.get("id")) }
+  });
+  await removePublicUpload(deleted.imageUrl);
   revalidateAll();
 }
 
 export async function createGlobalGalleryAction(formData: FormData) {
   await assertAuth();
+  const imageUrl = await saveImageFromFormData(formData, "imageFile", true);
 
   await prisma.globalGallery.create({
     data: {
-      imageUrl: String(formData.get("imageUrl") ?? ""),
+      imageUrl: imageUrl ?? "",
       caption: String(formData.get("caption") ?? "") || null
     }
   });
@@ -206,21 +246,31 @@ export async function createGlobalGalleryAction(formData: FormData) {
 
 export async function updateGlobalGalleryAction(formData: FormData) {
   await assertAuth();
+  const existingImageUrl = String(formData.get("existingImageUrl") ?? "");
+  const uploadedImageUrl = await saveImageFromFormData(formData, "imageFile");
+  const imageUrl = uploadedImageUrl ?? existingImageUrl;
 
   await prisma.globalGallery.update({
     where: { id: String(formData.get("id")) },
     data: {
-      imageUrl: String(formData.get("imageUrl") ?? ""),
+      imageUrl,
       caption: String(formData.get("caption") ?? "") || null
     }
   });
+
+  if (uploadedImageUrl && existingImageUrl && uploadedImageUrl !== existingImageUrl) {
+    await removePublicUpload(existingImageUrl);
+  }
 
   revalidateAll();
 }
 
 export async function deleteGlobalGalleryAction(formData: FormData) {
   await assertAuth();
-  await prisma.globalGallery.delete({ where: { id: String(formData.get("id")) } });
+  const deleted = await prisma.globalGallery.delete({
+    where: { id: String(formData.get("id")) }
+  });
+  await removePublicUpload(deleted.imageUrl);
   revalidateAll();
 }
 

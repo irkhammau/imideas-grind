@@ -12,9 +12,10 @@ export const siteSettingsSchema = z.object({
 });
 
 export const staffSchema = z.object({
+  order: z.coerce.number().int().min(0),
   name: z.string().min(2),
   position: z.string().min(2),
-  image: z.string().url()
+  image: z.string().min(1)
 });
 
 export const serviceSchema = z.object({
@@ -24,19 +25,19 @@ export const serviceSchema = z.object({
 
 export const eventSchema = z.object({
   eventName: z.string().min(2),
-  logo: z.string().url(),
+  logo: z.string().min(1),
   location: z.string().min(2),
   date: z.coerce.date()
 });
 
 export const eventGallerySchema = z.object({
   eventId: z.string().uuid(),
-  imageUrl: z.string().url(),
+  imageUrl: z.string().min(1),
   caption: z.string().optional()
 });
 
 export const globalGallerySchema = z.object({
-  imageUrl: z.string().url(),
+  imageUrl: z.string().min(1),
   caption: z.string().optional()
 });
 

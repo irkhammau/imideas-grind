@@ -4,16 +4,19 @@ import { createStaffAction, deleteStaffAction, updateStaffAction } from "@/app/a
 import { prisma } from "@/lib/prisma";
 
 export default async function StaffPage() {
-  const staff = await prisma.staff.findMany({ orderBy: { createdAt: "desc" } });
+  const staff = await prisma.staff.findMany({
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }]
+  });
 
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-grind-line bg-grind-surface p-6">
         <h1 className="font-heading text-2xl">Create Staff</h1>
         <form action={createStaffAction} className="mt-4 grid gap-3 md:grid-cols-2">
+          <input name="order" required type="number" min={0} placeholder="Urutan (0,1,2...)" />
           <input name="name" required placeholder="Nama" />
           <input name="position" required placeholder="Jabatan" />
-          <input name="image" required type="url" placeholder="Image URL" className="md:col-span-2" />
+          <input name="imageFile" required type="file" accept="image/*" className="md:col-span-2" />
           <SubmitButton>Tambah Staff</SubmitButton>
         </form>
       </section>
@@ -28,9 +31,14 @@ export default async function StaffPage() {
               <div className="space-y-3">
                 <form action={updateStaffAction} className="grid gap-3 md:grid-cols-2">
                   <input type="hidden" name="id" value={member.id} />
+                  <input type="hidden" name="existingImage" value={member.image} />
+                  <input name="order" type="number" min={0} defaultValue={member.order} required />
                   <input name="name" defaultValue={member.name} required />
                   <input name="position" defaultValue={member.position} required />
-                  <input name="image" defaultValue={member.image} required type="url" className="md:col-span-2" />
+                  <div className="md:col-span-2 rounded-lg border border-grind-line bg-[#111] px-3 py-2 text-xs text-zinc-400">
+                    Current image: {member.image}
+                  </div>
+                  <input name="imageFile" type="file" accept="image/*" className="md:col-span-2" />
                   <SubmitButton>Simpan Staff</SubmitButton>
                 </form>
                 <form action={deleteStaffAction}>

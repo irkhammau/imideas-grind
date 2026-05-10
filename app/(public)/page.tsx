@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 export default async function HomePage() {
   const [settings, staff, services, featuredEvents] = await Promise.all([
     prisma.siteSettings.findFirst({ orderBy: { createdAt: "asc" } }),
-    prisma.staff.findMany({ orderBy: { createdAt: "asc" } }),
+    prisma.staff.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }),
     prisma.service.findMany({ orderBy: { createdAt: "asc" } }),
     prisma.event.findMany({ orderBy: { date: "desc" }, take: 3, include: { galleries: true } })
   ]);
