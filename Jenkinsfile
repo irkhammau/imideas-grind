@@ -35,7 +35,7 @@ pipeline {
                     -e NEXTAUTH_URL="$NEXTAUTH_URL" \
                     -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
                     $DOCKER_IMAGE \
-                    npx prisma migrate deploy
+                    ./node_modules/.bin/prisma migrate deploy --schema=./prisma/schema.prisma
                 '''
             }
         }
@@ -49,7 +49,7 @@ pipeline {
                     -e NEXTAUTH_URL="$NEXTAUTH_URL" \
                     -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
                     $DOCKER_IMAGE \
-                    npx prisma db seed
+                    ./node_modules/.bin/prisma db seed --schema=./prisma/schema.prisma
                 '''
             }
         }
