@@ -11,11 +11,11 @@ export default async function ServicesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-grind-line bg-grind-surface p-6">
-        <h1 className="font-heading text-2xl">Create Service</h1>
+        <h1 className="font-heading text-2xl">Tambah Layanan</h1>
         <form action={createServiceAction} className="mt-4 grid gap-3">
           <input name="title" required placeholder="Judul layanan" />
           <textarea name="description" required rows={3} placeholder="Deskripsi layanan" />
-          <SubmitButton>Tambah Service</SubmitButton>
+          <SubmitButton>Tambah Layanan</SubmitButton>
         </form>
       </section>
 
@@ -26,7 +26,7 @@ export default async function ServicesPage() {
               <input type="hidden" name="id" value={service.id} />
               <input name="title" defaultValue={service.title} required />
               <textarea name="description" defaultValue={service.description} required rows={4} />
-              <SubmitButton>Simpan Service</SubmitButton>
+              <SubmitButton>Simpan Layanan</SubmitButton>
             </form>
             <form action={deleteServiceAction} className="mt-3">
               <input type="hidden" name="id" value={service.id} />

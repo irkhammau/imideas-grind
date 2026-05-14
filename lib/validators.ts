@@ -41,6 +41,14 @@ export const globalGallerySchema = z.object({
   caption: z.string().optional()
 });
 
+export const partnerSchema = z.object({
+  order: z.coerce.number().int().min(0),
+  name: z.string().min(2),
+  logo: z.string().min(1),
+  websiteUrl: z.string().url(),
+  description: z.string().optional()
+});
+
 export const userSchema = z.object({
   username: z.string().min(4),
   password: z.string().min(8),

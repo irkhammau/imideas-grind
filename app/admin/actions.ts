@@ -274,6 +274,58 @@ export async function deleteGlobalGalleryAction(formData: FormData) {
   revalidateAll();
 }
 
+export async function createPartnerAction(formData: FormData) {
+  await assertAuth();
+  const logo = await saveImageFromFormData(formData, "logoFile", true);
+  const order = Number(formData.get("order") ?? 0);
+
+  await prisma.partner.create({
+    data: {
+      order: Number.isNaN(order) ? 0 : order,
+      name: String(formData.get("name") ?? ""),
+      logo: logo ?? "",
+      websiteUrl: String(formData.get("websiteUrl") ?? ""),
+      description: String(formData.get("description") ?? "") || null
+    }
+  });
+
+  revalidateAll();
+}
+
+export async function updatePartnerAction(formData: FormData) {
+  await assertAuth();
+  const existingLogo = String(formData.get("existingLogo") ?? "");
+  const uploadedLogo = await saveImageFromFormData(formData, "logoFile");
+  const logo = uploadedLogo ?? existingLogo;
+  const order = Number(formData.get("order") ?? 0);
+
+  await prisma.partner.update({
+    where: { id: String(formData.get("id")) },
+    data: {
+      order: Number.isNaN(order) ? 0 : order,
+      name: String(formData.get("name") ?? ""),
+      logo,
+      websiteUrl: String(formData.get("websiteUrl") ?? ""),
+      description: String(formData.get("description") ?? "") || null
+    }
+  });
+
+  if (uploadedLogo && existingLogo && uploadedLogo !== existingLogo) {
+    await removePublicUpload(existingLogo);
+  }
+
+  revalidateAll();
+}
+
+export async function deletePartnerAction(formData: FormData) {
+  await assertAuth();
+  const deleted = await prisma.partner.delete({
+    where: { id: String(formData.get("id")) }
+  });
+  await removePublicUpload(deleted.logo);
+  revalidateAll();
+}
+
 export async function createUserAction(formData: FormData) {
   await assertAuth();
 

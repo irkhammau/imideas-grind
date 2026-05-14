@@ -14,13 +14,13 @@ export default async function StaffPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-grind-line bg-grind-surface p-6">
-        <h1 className="font-heading text-2xl">Create Staff</h1>
+        <h1 className="font-heading text-2xl">Tambah Staf</h1>
         <form action={createStaffAction} className="mt-4 grid gap-3 md:grid-cols-2">
           <input name="order" required type="number" min={0} placeholder="Urutan (0,1,2...)" />
           <input name="name" required placeholder="Nama" />
           <input name="position" required placeholder="Jabatan" />
           <input name="imageFile" required type="file" accept="image/*" className="md:col-span-2" />
-          <SubmitButton>Tambah Staff</SubmitButton>
+          <SubmitButton>Tambah Staf</SubmitButton>
         </form>
       </section>
 
@@ -39,15 +39,15 @@ export default async function StaffPage() {
                   <input name="name" defaultValue={member.name} required />
                   <input name="position" defaultValue={member.position} required />
                   <div className="md:col-span-2 rounded-lg border border-grind-line bg-[#111] px-3 py-2 text-xs text-zinc-400">
-                    Current image: {member.image}
+                    Gambar saat ini: {member.image}
                   </div>
                   <input name="imageFile" type="file" accept="image/*" className="md:col-span-2" />
-                  <SubmitButton>Simpan Staff</SubmitButton>
+                  <SubmitButton>Simpan Staf</SubmitButton>
                 </form>
                 <form action={deleteStaffAction}>
                   <input type="hidden" name="id" value={member.id} />
                   <button className="rounded-lg border border-red-500 px-3 py-2 text-xs uppercase tracking-wider text-red-400 hover:bg-red-500/10">
-                    Hapus Staff
+                    Hapus Staf
                   </button>
                 </form>
               </div>

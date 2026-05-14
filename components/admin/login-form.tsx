@@ -40,7 +40,7 @@ export function LoginForm() {
         <input name="username" required placeholder="admin" />
       </div>
       <div>
-        <label className="mb-2 block text-sm text-zinc-300">Password</label>
+        <label className="mb-2 block text-sm text-zinc-300">Kata Sandi</label>
         <input name="password" type="password" required placeholder="••••••••" />
       </div>
       {error && <p className="text-sm text-red-400">{error}</p>}
@@ -49,7 +49,7 @@ export function LoginForm() {
         disabled={pending}
         className="w-full rounded-xl bg-grind-red px-4 py-2.5 text-sm font-semibold uppercase tracking-wider text-white hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {pending ? "Masuk..." : "Login Admin"}
+        {pending ? "Masuk..." : "Masuk Admin"}
       </button>
     </form>
   );

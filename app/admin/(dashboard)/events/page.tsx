@@ -19,9 +19,9 @@ export default async function EventsPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-grind-line bg-grind-surface p-6">
-        <h1 className="font-heading text-2xl">Create Event</h1>
+        <h1 className="font-heading text-2xl">Tambah Acara</h1>
         <form action={createEventAction} className="mt-4 grid gap-3 md:grid-cols-2">
-          <input name="eventName" required placeholder="Nama event" />
+          <input name="eventName" required placeholder="Nama acara" />
           <input name="location" required placeholder="Lokasi" />
           <input name="logoFile" required type="file" accept="image/*" className="md:col-span-2" />
           <input name="date" required type="date" className="md:col-span-2" />
@@ -38,7 +38,7 @@ export default async function EventsPage() {
               <input name="eventName" defaultValue={event.eventName} required />
               <input name="location" defaultValue={event.location} required />
               <div className="md:col-span-2 rounded-lg border border-grind-line bg-[#111] px-3 py-2 text-xs text-zinc-400">
-                Current logo: {event.logo}
+                Logo saat ini: {event.logo}
               </div>
               <input name="logoFile" type="file" accept="image/*" className="md:col-span-2" />
               <input
@@ -58,7 +58,7 @@ export default async function EventsPage() {
             </form>
 
             <div className="mt-4 rounded-xl border border-grind-line bg-[#0f0f0f] p-3">
-              <p className="mb-3 text-sm uppercase tracking-wider text-zinc-400">Gallery for {event.eventName}</p>
+              <p className="mb-3 text-sm uppercase tracking-wider text-zinc-400">Galeri untuk {event.eventName}</p>
               <form action={createEventGalleryAction} className="grid gap-3 md:grid-cols-2">
                 <input type="hidden" name="eventId" value={event.id} />
                 <input name="imageFile" type="file" accept="image/*" required className="md:col-span-2" />

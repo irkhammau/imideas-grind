@@ -26,7 +26,7 @@ export default async function GlobalGalleriesPage() {
               <input type="hidden" name="id" value={item.id} />
               <input type="hidden" name="existingImageUrl" value={item.imageUrl} />
               <div className="rounded-lg border border-grind-line bg-[#111] px-3 py-2 text-xs text-zinc-400">
-                Current image: {item.imageUrl}
+                Gambar saat ini: {item.imageUrl}
               </div>
               <input name="imageFile" type="file" accept="image/*" />
               <input name="caption" defaultValue={item.caption ?? ""} />

@@ -18,7 +18,7 @@ export default async function EventsPage() {
   return (
     <section className="section-container py-12">
       <FadeIn>
-        <h1 className="font-heading text-4xl">Event Portfolio</h1>
+        <h1 className="font-heading text-4xl">Portofolio Acara</h1>
       </FadeIn>
       <div className="mt-8 space-y-8">
         {events.map((event, index) => (
@@ -36,7 +36,7 @@ export default async function EventsPage() {
                   </p>
                 </div>
                 <div>
-                  <p className="mb-3 text-sm uppercase tracking-[0.18em] text-zinc-400">Galeri Event</p>
+                  <p className="mb-3 text-sm uppercase tracking-[0.18em] text-zinc-400">Galeri Acara</p>
                   <div className="grid grid-cols-2 gap-3">
                     {event.galleries.map((gallery) => (
                       <figure key={gallery.id} className="rounded-xl border border-grind-line bg-[#0f0f0f] p-2">

@@ -5,8 +5,13 @@ import { authOptions } from "@/lib/auth";
 import { SessionProvider } from "@/components/ui/session-provider";
 
 export const metadata: Metadata = {
-  title: "GRIND | Company Profile",
-  description: "PT Gelora Energi Indonesia - Sportainment Event Organizer"
+  title: "GRIND | Profil Perusahaan",
+  description: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico"
+  }
 };
 
 export default async function RootLayout({

@@ -26,7 +26,7 @@ export function Footer({ companyName, contact, youtubeUrl, instagramUrl }: Foote
               Instagram
             </Link>
             <Link href="/admin/login" className="hover:text-white">
-              Admin
+              Panel Admin
             </Link>
           </div>
         </div>

@@ -7,27 +7,29 @@ export const dynamic = "force-dynamic";
 
 
 export default async function HomePage() {
-  const [settings, staff, services, featuredEvents] = await Promise.all([
+  const [settings, staff, services, partners, featuredEvents] = await Promise.all([
     prisma.siteSettings.findFirst({ orderBy: { createdAt: "asc" } }),
     prisma.staff.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }),
     prisma.service.findMany({ orderBy: { createdAt: "asc" } }),
+    prisma.partner.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }),
     prisma.event.findMany({ orderBy: { date: "desc" }, take: 3, include: { galleries: true } })
   ]);
 
   const contact = (settings?.contact as { email?: string; phone?: string; address?: string } | null) ?? {};
+  const partnerLoop = partners.length > 0 ? [...partners, ...partners] : [];
 
   return (
     <div>
       <section className="section-container grid min-h-[78vh] gap-10 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center">
         <FadeIn>
-          <p className="text-xs uppercase tracking-[0.3em] text-grind-cyan">Sportainment Event Organizer</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-grind-cyan">Penyelenggara Acara Sportainment</p>
           <h1 className="mt-4 font-heading text-4xl font-semibold leading-tight md:text-6xl">
             {settings?.companyName ?? "PT GELORA ENERGI INDONESIA"}
           </h1>
           <p className="mt-4 max-w-2xl text-base text-zinc-300 md:text-lg">{settings?.tagline}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/events" className="rounded-xl bg-grind-red px-6 py-3 text-sm font-semibold uppercase tracking-widest hover:brightness-110">
-              Jelajahi Event
+              Jelajahi Acara
             </Link>
             <a href="#contact" className="rounded-xl border border-grind-cyan px-6 py-3 text-sm font-semibold uppercase tracking-widest text-grind-cyan hover:bg-grind-cyan hover:text-black">
               Hubungi Kami
@@ -40,7 +42,7 @@ export default async function HomePage() {
             <div className="relative overflow-hidden rounded-2xl bg-black">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_45%)]" />
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="GRIND"
                 width={860}
                 height={860}
@@ -54,7 +56,7 @@ export default async function HomePage() {
 
       <section id="about" className="section-container py-14">
         <FadeIn>
-          <h2 className="font-heading text-3xl md:text-4xl">About GRIND</h2>
+          <h2 className="font-heading text-3xl md:text-4xl">Tentang GRIND</h2>
           <p className="mt-5 max-w-4xl text-zinc-300">{settings?.aboutText}</p>
         </FadeIn>
       </section>
@@ -79,7 +81,7 @@ export default async function HomePage() {
 
       <section id="team" className="section-container py-14">
         <FadeIn>
-          <h2 className="font-heading text-3xl md:text-4xl">Jajaran Staff</h2>
+          <h2 className="font-heading text-3xl md:text-4xl">Jajaran Staf</h2>
         </FadeIn>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {staff.map((member, idx) => (
@@ -106,10 +108,48 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section id="partners" className="section-container py-14">
+        <FadeIn>
+          <h2 className="font-heading text-3xl md:text-4xl">Mitra Kami</h2>
+        </FadeIn>
+        <div className="mt-8 overflow-hidden rounded-2xl border border-grind-line bg-grind-surface/50 p-3">
+          <div className="partner-marquee-track">
+            {partnerLoop.map((partner, idx) => (
+              <a
+                key={`${partner.id}-${idx}`}
+                href={partner.websiteUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="partner-marquee-item group rounded-xl border border-grind-line bg-[#0f0f0f] p-4 hover:border-grind-cyan/70"
+              >
+                <div className="relative h-20 overflow-hidden rounded-lg bg-black">
+                  <Image
+                    src={partner.logo}
+                    alt={partner.name}
+                    fill
+                    className="object-contain p-2"
+                    sizes="220px"
+                  />
+                </div>
+                <div className="pt-3">
+                  <p className="font-semibold text-white">{partner.name}</p>
+                  {partner.description ? (
+                    <p className="mt-1 text-xs leading-relaxed text-zinc-300">{partner.description}</p>
+                  ) : null}
+                    <p className="mt-2 text-[10px] uppercase tracking-wider text-grind-cyan group-hover:text-white">
+                      Kunjungi Situs
+                    </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="section-container py-14">
         <FadeIn>
           <div className="mb-6 flex items-center justify-between gap-4">
-            <h2 className="font-heading text-3xl md:text-4xl">Event Terbaru</h2>
+            <h2 className="font-heading text-3xl md:text-4xl">Acara Terbaru</h2>
             <Link href="/events" className="text-sm uppercase tracking-wider text-grind-cyan hover:text-white">
               Lihat Semua
             </Link>
@@ -148,7 +188,7 @@ export default async function HomePage() {
           <div className="rounded-3xl border border-grind-line bg-[#101010] p-8">
             <h2 className="font-heading text-3xl md:text-4xl">Kontak</h2>
             <p className="mt-4 text-zinc-300">Email: {contact.email}</p>
-            <p className="mt-2 text-zinc-300">Phone: {contact.phone}</p>
+            <p className="mt-2 text-zinc-300">Telepon: {contact.phone}</p>
             <p className="mt-2 text-zinc-300">Alamat: {contact.address}</p>
           </div>
         </FadeIn>

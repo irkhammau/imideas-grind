@@ -4,25 +4,27 @@ export const dynamic = "force-dynamic";
 
 
 export default async function AdminOverviewPage() {
-  const [staffCount, servicesCount, eventsCount, globalGalleryCount, userCount] = await Promise.all([
+  const [staffCount, servicesCount, partnersCount, eventsCount, globalGalleryCount, userCount] = await Promise.all([
     prisma.staff.count(),
     prisma.service.count(),
+    prisma.partner.count(),
     prisma.event.count(),
     prisma.globalGallery.count(),
     prisma.user.count()
   ]);
 
   const cards = [
-    { label: "Staff", value: staffCount },
-    { label: "Services", value: servicesCount },
-    { label: "Events", value: eventsCount },
+    { label: "Staf", value: staffCount },
+    { label: "Layanan", value: servicesCount },
+    { label: "Mitra", value: partnersCount },
+    { label: "Acara", value: eventsCount },
     { label: "Galeri Perusahaan", value: globalGalleryCount },
-    { label: "Users", value: userCount }
+    { label: "Pengguna", value: userCount }
   ];
 
   return (
     <div>
-      <h1 className="font-heading text-3xl">Dashboard Overview</h1>
+      <h1 className="font-heading text-3xl">Ringkasan Dasbor</h1>
       <p className="mt-2 text-zinc-400">Kelola konten company profile GRIND dari panel ini.</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

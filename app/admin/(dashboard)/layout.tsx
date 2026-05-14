@@ -7,13 +7,14 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 const navItems = [
-  { href: "/admin", label: "Overview" },
-  { href: "/admin/site-settings", label: "Site Settings" },
-  { href: "/admin/staff", label: "Staff" },
-  { href: "/admin/services", label: "Services" },
-  { href: "/admin/events", label: "Events" },
+  { href: "/admin", label: "Ringkasan" },
+  { href: "/admin/site-settings", label: "Pengaturan Situs" },
+  { href: "/admin/staff", label: "Staf" },
+  { href: "/admin/services", label: "Layanan" },
+  { href: "/admin/partners", label: "Mitra" },
+  { href: "/admin/events", label: "Acara" },
   { href: "/admin/global-galleries", label: "Galeri Perusahaan" },
-  { href: "/admin/users", label: "Users" }
+  { href: "/admin/users", label: "Pengguna" }
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +29,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-grind-line bg-grind-surface p-4">
         <div>
           <p className="text-xs uppercase tracking-[0.24em] text-zinc-400">GRIND CMS</p>
-          <p className="font-semibold text-white">Hi, {session.user.name}</p>
+          <p className="font-semibold text-white">Halo, {session.user.name}</p>
         </div>
         <LogoutButton />
       </div>
