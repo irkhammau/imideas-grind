@@ -26,33 +26,33 @@ pipeline {
             }
         }
 
-        stage('Run Migration') {
-            steps {
-                sh '''
-                    docker run --rm \
-                    --network $DOCKER_NETWORK \
-                    -e DATABASE_URL="$DATABASE_URL" \
-                    -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-                    -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
-                    $DOCKER_IMAGE \
-                    ./node_modules/.bin/prisma migrate deploy --schema=./prisma/schema.prisma
-                '''
-            }
-        }
+        // stage('Run Migration') {
+        //     steps {
+        //         sh '''
+        //             docker run --rm \
+        //             --network $DOCKER_NETWORK \
+        //             -e DATABASE_URL="$DATABASE_URL" \
+        //             -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+        //             -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
+        //             $DOCKER_IMAGE \
+        //             ./node_modules/.bin/prisma migrate deploy --schema=./prisma/schema.prisma
+        //         '''
+        //     }
+        // }
 
-        stage('Run Seed') {
-            steps {
-                sh '''
-                    docker run --rm \
-                    --network $DOCKER_NETWORK \
-                    -e DATABASE_URL="$DATABASE_URL" \
-                    -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-                    -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
-                    $DOCKER_IMAGE \
-                    ./node_modules/.bin/prisma db seed --schema=./prisma/schema.prisma
-                '''
-            }
-        }
+        // stage('Run Seed') {
+        //     steps {
+        //         sh '''
+        //             docker run --rm \
+        //             --network $DOCKER_NETWORK \
+        //             -e DATABASE_URL="$DATABASE_URL" \
+        //             -e NEXTAUTH_URL="$NEXTAUTH_URL" \
+        //             -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
+        //             $DOCKER_IMAGE \
+        //             ./node_modules/.bin/prisma db seed --schema=./prisma/schema.prisma
+        //         '''
+        //     }
+        // }
 
         stage('Deploy') {
             steps {
