@@ -23,7 +23,7 @@ export function Navbar({ companyName, youtubeUrl, instagramUrl }: NavbarProps) {
       <div className="section-container flex h-16 items-center justify-between gap-3">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/logo.webp"
+            src="/logo.png"
             alt="Logo GRIND"
             width={160}
             height={90}

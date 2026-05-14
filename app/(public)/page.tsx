@@ -42,7 +42,7 @@ export default async function HomePage() {
             <div className="relative overflow-hidden rounded-2xl bg-black">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_45%)]" />
               <Image
-                src="/logo.webp"
+                src="/logo.png"
                 alt="GRIND"
                 width={860}
                 height={860}
