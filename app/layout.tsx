@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { SessionProvider } from "@/components/ui/session-provider";
 
 export const metadata: Metadata = {
-  title: "GRIND | Profil Perusahaan",
+  title: "GRIND | PT Gelora Energi Indonesia",
   description: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment",
   icons: {
     icon: "/favicon.ico",
