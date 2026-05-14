@@ -14,7 +14,8 @@ const navItems = [
   { href: "/admin/partners", label: "Mitra" },
   { href: "/admin/events", label: "Acara" },
   { href: "/admin/global-galleries", label: "Galeri Perusahaan" },
-  { href: "/admin/users", label: "Pengguna" }
+  { href: "/admin/users", label: "Pengguna" },
+  { href: "/admin/change-password", label: "Ganti Kata Sandi" }
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {

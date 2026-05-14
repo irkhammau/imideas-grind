@@ -12,6 +12,7 @@ async function assertAuth() {
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
+  return session;
 }
 
 function revalidateAll() {
@@ -372,4 +373,50 @@ export async function deleteUserAction(formData: FormData) {
   await assertAuth();
   await prisma.user.delete({ where: { id: String(formData.get("id")) } });
   revalidatePath("/admin/users");
+}
+
+export async function changeMyPasswordAction(formData: FormData) {
+  const session = await assertAuth();
+
+  const currentPassword = String(formData.get("currentPassword") ?? "");
+  const newPassword = String(formData.get("newPassword") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    throw new Error("Semua kolom wajib diisi.");
+  }
+
+  if (newPassword.length < 8) {
+    throw new Error("Kata sandi baru minimal 8 karakter.");
+  }
+
+  if (newPassword !== confirmPassword) {
+    throw new Error("Konfirmasi kata sandi tidak cocok.");
+  }
+
+  if (newPassword === currentPassword) {
+    throw new Error("Kata sandi baru harus berbeda dari kata sandi saat ini.");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id }
+  });
+
+  if (!user) {
+    throw new Error("Pengguna tidak ditemukan.");
+  }
+
+  const isValidCurrentPassword = await bcrypt.compare(currentPassword, user.password);
+  if (!isValidCurrentPassword) {
+    throw new Error("Kata sandi saat ini salah.");
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { password: hashed }
+  });
+
+  revalidatePath("/admin/change-password");
 }

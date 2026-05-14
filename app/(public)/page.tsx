@@ -132,13 +132,10 @@ export default async function HomePage() {
                   />
                 </div>
                 <div className="pt-3">
-                  <p className="font-semibold text-white">{partner.name}</p>
+                  <p className="font-semibold text-white text-center">{partner.name}</p>
                   {partner.description ? (
                     <p className="mt-1 text-xs leading-relaxed text-zinc-300">{partner.description}</p>
                   ) : null}
-                    <p className="mt-2 text-[10px] uppercase tracking-wider text-grind-cyan group-hover:text-white">
-                      Kunjungi Situs
-                    </p>
                 </div>
               </a>
             ))}
