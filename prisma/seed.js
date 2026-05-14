@@ -30,8 +30,8 @@ const staffData = [
 ];
 
 const partnerData = [
-  { order: 1, name: "IMIdeas", logo: "/default.png", websiteUrl: "https://imideas.my.id", description: "Strategic creative and digital solutions partner." },
-  { order: 2, name: "GRIND Indonesia", logo: "/default.png", websiteUrl: "https://grind.imideas.my.id", description: "Sportainment execution and event operations partner." },
+  { order: 1, name: "IMIdeas", logo: "/default.png", websiteUrl: "https://grind.co.id", description: "Strategic creative and digital solutions partner." },
+  { order: 2, name: "GRIND Indonesia", logo: "/default.png", websiteUrl: "https://grind.co.id", description: "Sportainment execution and event operations partner." },
   { order: 3, name: "SportHub Nusantara", logo: "/default.png", websiteUrl: "https://example.com/sporthub", description: "Kolaborator aktivasi komunitas olahraga regional." },
   { order: 4, name: "ArenaConnect", logo: "/default.png", websiteUrl: "https://example.com/arenaconnect", description: "Partner integrasi venue dan manajemen lapangan." },
   { order: 5, name: "MediaSprint", logo: "/default.png", websiteUrl: "https://example.com/mediasprint", description: "Partner distribusi konten dan dokumentasi event." },

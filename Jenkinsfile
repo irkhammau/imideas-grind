@@ -7,7 +7,7 @@ pipeline {
         DOCKER_NETWORK = 'imideas-net'
 
         DATABASE_URL = 'mysql://root:P%40ssw0rd@mysql-lab:3306/grind_db'
-        NEXTAUTH_URL = 'https://grind.imideas.my.id'
+        NEXTAUTH_URL = 'https://grind.co.id'
         NEXTAUTH_SECRET = 'gtZoGuDkMNrAVN1tPfVDfBeu2i7+HU8th1XpC8gLOB4='
     }
 
