@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FadeIn } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
+import { resolveImageSrc } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export default async function EventsPage() {
               <div className="grid gap-6 md:grid-cols-[1fr_1.2fr]">
                 <div>
                   <div className="relative h-64 overflow-hidden rounded-xl bg-black">
-                    <Image src={event.logo} alt={event.eventName} fill unoptimized className="object-cover object-center scale-110" />
+                    <Image src={resolveImageSrc(event.logo)} alt={event.eventName} fill unoptimized className="object-cover object-center scale-110" />
                   </div>
                   <h2 className="mt-4 font-heading text-2xl">{event.eventName}</h2>
                   <p className="text-zinc-300">{event.location}</p>
@@ -42,7 +43,7 @@ export default async function EventsPage() {
                       <figure key={gallery.id} className="rounded-xl border border-grind-line bg-[#0f0f0f] p-2">
                         <div className="relative h-32 overflow-hidden rounded-lg bg-black sm:h-40">
                           <Image
-                            src={gallery.imageUrl}
+                            src={resolveImageSrc(gallery.imageUrl)}
                             alt={gallery.caption ?? event.eventName}
                             fill
                             unoptimized

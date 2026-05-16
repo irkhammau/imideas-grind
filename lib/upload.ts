@@ -56,12 +56,21 @@ export async function saveImageFromFormData(
 
   await writeFile(diskPath, buffer);
 
-  return `/uploads/${fileName}`;
+  return `/api/uploads/${fileName}`;
 }
 
 export async function removePublicUpload(filePath?: string | null) {
-  if (!filePath || !filePath.startsWith("/uploads/")) return;
+  if (!filePath) return;
 
-  const diskPath = path.join(process.cwd(), "public", filePath.replace(/^\//, ""));
+  let relativePath = "";
+  if (filePath.startsWith("/uploads/")) {
+    relativePath = filePath.replace(/^\//, "");
+  } else if (filePath.startsWith("/api/uploads/")) {
+    relativePath = `uploads/${filePath.replace(/^\/api\/uploads\//, "")}`;
+  } else {
+    return;
+  }
+
+  const diskPath = path.join(process.cwd(), "public", relativePath);
   await unlink(diskPath).catch(() => undefined);
 }

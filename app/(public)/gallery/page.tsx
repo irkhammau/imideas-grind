@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FadeIn, HoverCard } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
+import { resolveImageSrc } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export default async function GlobalGalleryPage() {
               <figure className="rounded-2xl border border-grind-line bg-grind-surface p-3">
                 <div className="relative h-64 overflow-hidden rounded-xl bg-black">
                   <Image
-                    src={item.imageUrl}
+                    src={resolveImageSrc(item.imageUrl)}
                     alt={item.caption ?? "Galeri GRIND"}
                     fill
                     unoptimized

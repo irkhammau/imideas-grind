@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn, HoverCard } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
+import { resolveImageSrc } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -90,7 +91,7 @@ export default async function HomePage() {
                 <article className="rounded-2xl border border-grind-line bg-grind-surface p-4">
                   <div className="relative h-72 overflow-hidden rounded-xl bg-black">
                     <Image
-                      src={member.image}
+                      src={resolveImageSrc(member.image)}
                       alt={member.name}
                       fill
                       unoptimized
@@ -125,7 +126,7 @@ export default async function HomePage() {
               >
                 <div className="relative h-20 overflow-hidden rounded-lg bg-black">
                   <Image
-                    src={partner.logo}
+                    src={resolveImageSrc(partner.logo)}
                     alt={partner.name}
                     fill
                     unoptimized
@@ -161,7 +162,7 @@ export default async function HomePage() {
                 <article className="rounded-2xl border border-grind-line bg-grind-surface p-4">
                   <div className="relative h-52 overflow-hidden rounded-xl bg-black">
                     <Image
-                      src={event.logo}
+                      src={resolveImageSrc(event.logo)}
                       alt={event.eventName}
                       fill
                       unoptimized
