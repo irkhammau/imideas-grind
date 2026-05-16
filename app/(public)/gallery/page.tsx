@@ -27,6 +27,7 @@ export default async function GlobalGalleryPage() {
                     src={item.imageUrl}
                     alt={item.caption ?? "Galeri GRIND"}
                     fill
+                    unoptimized
                     className="object-cover object-center scale-110"
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />

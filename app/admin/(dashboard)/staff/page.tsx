@@ -29,7 +29,7 @@ export default async function StaffPage() {
           <article key={member.id} className="rounded-2xl border border-grind-line bg-grind-surface p-4">
             <div className="grid gap-4 md:grid-cols-[120px_1fr]">
               <div className="relative h-28 overflow-hidden rounded-xl bg-black">
-                <Image src={member.image} alt={member.name} fill className="object-cover object-center scale-110" />
+                <Image src={member.image} alt={member.name} fill unoptimized className="object-cover object-center scale-110" />
               </div>
               <div className="space-y-3">
                 <form action={updateStaffAction} className="grid gap-3 md:grid-cols-2">

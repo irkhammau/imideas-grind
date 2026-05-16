@@ -27,7 +27,7 @@ export default async function EventsPage() {
               <div className="grid gap-6 md:grid-cols-[1fr_1.2fr]">
                 <div>
                   <div className="relative h-64 overflow-hidden rounded-xl bg-black">
-                    <Image src={event.logo} alt={event.eventName} fill className="object-cover object-center scale-110" />
+                    <Image src={event.logo} alt={event.eventName} fill unoptimized className="object-cover object-center scale-110" />
                   </div>
                   <h2 className="mt-4 font-heading text-2xl">{event.eventName}</h2>
                   <p className="text-zinc-300">{event.location}</p>
@@ -45,6 +45,7 @@ export default async function EventsPage() {
                             src={gallery.imageUrl}
                             alt={gallery.caption ?? event.eventName}
                             fill
+                            unoptimized
                             className="object-cover object-center scale-110"
                             sizes="(max-width: 768px) 50vw, 25vw"
                           />

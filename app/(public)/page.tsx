@@ -93,6 +93,7 @@ export default async function HomePage() {
                       src={member.image}
                       alt={member.name}
                       fill
+                      unoptimized
                       className="object-cover object-center scale-110"
                       sizes="(max-width: 768px) 100vw, 25vw"
                     />
@@ -127,6 +128,7 @@ export default async function HomePage() {
                     src={partner.logo}
                     alt={partner.name}
                     fill
+                    unoptimized
                     className="object-contain p-2"
                     sizes="220px"
                   />
@@ -162,6 +164,7 @@ export default async function HomePage() {
                       src={event.logo}
                       alt={event.eventName}
                       fill
+                      unoptimized
                       className="object-cover object-center scale-110"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />

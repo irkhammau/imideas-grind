@@ -29,7 +29,7 @@ export default async function PartnersPage() {
           <article key={partner.id} className="rounded-2xl border border-grind-line bg-grind-surface p-4">
             <div className="grid gap-4 md:grid-cols-[120px_1fr]">
               <div className="relative h-28 overflow-hidden rounded-xl bg-black">
-                <Image src={partner.logo} alt={partner.name} fill className="object-contain p-3" />
+                <Image src={partner.logo} alt={partner.name} fill unoptimized className="object-contain p-3" />
               </div>
               <div className="space-y-3">
                 <form action={updatePartnerAction} className="grid gap-3 md:grid-cols-2">
