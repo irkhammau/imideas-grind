@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ActionToast } from "@/components/admin/action-toast";
 import { LogoutButton } from "@/components/admin/logout-button";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
@@ -27,6 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <main className="section-container py-8">
+      <ActionToast />
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-grind-line bg-grind-surface p-4">
         <div>
           <p className="text-xs uppercase tracking-[0.24em] text-zinc-400">GRIND CMS</p>
