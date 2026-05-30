@@ -1,10 +1,14 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import { FadeIn, HoverCard } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
 import { resolveImageSrc } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
-
+export const metadata: Metadata = {
+  title: "Galeri Dokumentasi Perusahaan",
+  description: "Dokumentasi visual kegiatan perusahaan GRIND: foto event, aktivitas tim, dan momen penting lainnya."
+};
 
 export default async function GlobalGalleryPage() {
   const galleries = await prisma.globalGallery.findMany({
@@ -18,11 +22,11 @@ export default async function GlobalGalleryPage() {
         <p className="mt-3 text-zinc-300">Dokumentasi umum perusahaan GRIND.</p>
       </FadeIn>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {galleries.map((item, idx) => (
-          <FadeIn key={item.id} delay={idx * 0.05}>
-            <HoverCard>
-              <figure className="rounded-2xl border border-grind-line bg-grind-surface p-3">
+          <FadeIn key={item.id} delay={idx * 0.05} className="h-full">
+            <HoverCard className="h-full">
+              <figure className="flex h-full flex-col rounded-2xl border border-grind-line bg-grind-surface p-3">
                 <div className="relative h-64 overflow-hidden rounded-xl bg-black">
                   <Image
                     src={resolveImageSrc(item.imageUrl)}
@@ -33,7 +37,7 @@ export default async function GlobalGalleryPage() {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
-                {item.caption && <figcaption className="pt-3 text-sm text-zinc-300">{item.caption}</figcaption>}
+                <figcaption className="min-h-[3rem] pt-3 text-sm text-zinc-300">{item.caption ?? ""}</figcaption>
               </figure>
             </HoverCard>
           </FadeIn>

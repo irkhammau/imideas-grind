@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { FadeIn, HoverCard } from "@/components/public/motion";
 import { prisma } from "@/lib/prisma";
 import { resolveImageSrc } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "EO Sportainment & Aktivasi Brand di Indonesia",
+  description:
+    "GRIND menghadirkan layanan penyelenggaraan acara sportainment: produksi kreatif, manajemen venue, publikasi media, live score, e-sertifikat, dan sponsorship."
+};
 
 
 export default async function HomePage() {
@@ -66,13 +72,13 @@ export default async function HomePage() {
         <FadeIn>
           <h2 className="font-heading text-3xl md:text-4xl">Layanan Utama</h2>
         </FadeIn>
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid auto-rows-fr gap-5 md:grid-cols-2 lg:grid-cols-4">
           {services.map((service, idx) => (
-            <FadeIn key={service.id} delay={idx * 0.06}>
-              <HoverCard>
-                <article className="h-full rounded-2xl border border-grind-line bg-grind-surface p-6">
-                  <h3 className="font-heading text-xl text-white">{service.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-zinc-300">{service.description}</p>
+            <FadeIn key={service.id} delay={idx * 0.06} className="h-full">
+              <HoverCard className="h-full">
+                <article className="flex h-full min-h-[198px] flex-col rounded-2xl border border-grind-line bg-grind-surface p-6">
+                  <h3 className="min-h-[64px] font-heading text-xl text-white">{service.title}</h3>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-zinc-300">{service.description}</p>
                 </article>
               </HoverCard>
             </FadeIn>
@@ -84,12 +90,12 @@ export default async function HomePage() {
         <FadeIn>
           <h2 className="font-heading text-3xl md:text-4xl">Jajaran Staf</h2>
         </FadeIn>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {staff.map((member, idx) => (
-            <FadeIn key={member.id} delay={idx * 0.05}>
-              <HoverCard>
-                <article className="rounded-2xl border border-grind-line bg-grind-surface p-4">
-                  <div className="relative h-72 overflow-hidden rounded-xl bg-black">
+            <FadeIn key={member.id} delay={idx * 0.05} className="h-full">
+              <HoverCard className="h-full">
+                <article className="flex h-full flex-col rounded-2xl border border-grind-line bg-grind-surface p-4">
+                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-black">
                     <Image
                       src={resolveImageSrc(member.image)}
                       alt={member.name}
@@ -99,7 +105,7 @@ export default async function HomePage() {
                       sizes="(max-width: 768px) 100vw, 25vw"
                     />
                   </div>
-                  <div className="pt-4">
+                  <div className="min-h-[64px] pt-4">
                     <p className="font-semibold text-white">{member.name}</p>
                     <p className="text-sm text-grind-cyan">{member.position}</p>
                   </div>
@@ -122,7 +128,7 @@ export default async function HomePage() {
                 href={partner.websiteUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="partner-marquee-item group rounded-xl border border-grind-line bg-[#0f0f0f] p-4 hover:border-grind-cyan/70"
+                className="partner-marquee-item group flex h-[236px] flex-col rounded-xl border border-grind-line bg-[#0f0f0f] p-4 hover:border-grind-cyan/70"
               >
                 <div className="relative h-20 overflow-hidden rounded-lg bg-black">
                   <Image
@@ -134,10 +140,10 @@ export default async function HomePage() {
                     sizes="220px"
                   />
                 </div>
-                <div className="pt-3">
+                <div className="flex flex-1 flex-col pt-3">
                   <p className="font-semibold text-white text-center">{partner.name}</p>
                   {partner.description ? (
-                    <p className="mt-1 text-xs leading-relaxed text-zinc-300">{partner.description}</p>
+                    <p className="mt-1 max-h-[3.3rem] overflow-hidden text-xs leading-relaxed text-zinc-300">{partner.description}</p>
                   ) : null}
                 </div>
               </a>
@@ -155,23 +161,23 @@ export default async function HomePage() {
             </Link>
           </div>
         </FadeIn>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid auto-rows-fr gap-6 md:grid-cols-3">
           {featuredEvents.map((event, idx) => (
-            <FadeIn key={event.id} delay={idx * 0.07}>
-              <HoverCard>
-                <article className="rounded-2xl border border-grind-line bg-grind-surface p-4">
-                  <div className="relative h-52 overflow-hidden rounded-xl bg-black">
+            <FadeIn key={event.id} delay={idx * 0.07} className="h-full">
+              <HoverCard className="h-full">
+                <article className="flex h-full flex-col rounded-2xl border border-grind-line bg-grind-surface p-4">
+                  <div className="relative mx-auto aspect-[2/3] w-full max-w-[320px] overflow-hidden rounded-xl bg-black">
                     <Image
                       src={resolveImageSrc(event.logo)}
                       alt={event.eventName}
                       fill
                       unoptimized
-                      className="object-cover object-center scale-110"
+                      className="object-cover object-center"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
-                  <div className="pt-4">
-                    <h3 className="font-semibold text-white">{event.eventName}</h3>
+                  <div className="min-h-[112px] pt-4">
+                    <h3 className="min-h-[48px] font-semibold text-white">{event.eventName}</h3>
                     <p className="mt-1 text-sm text-zinc-300">{event.location}</p>
                     <p className="mt-1 text-sm text-grind-cyan">
                       {new Intl.DateTimeFormat("id-ID", { dateStyle: "long" }).format(event.date)}
