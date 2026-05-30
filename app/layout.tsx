@@ -7,20 +7,22 @@ import { SessionProvider } from "@/components/ui/session-provider";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.grind.co.id"),
   title: {
-    default: "GRIND | EO Sportainment & Aktivasi Brand di Indonesia",
+    default: "GRIND | PT Gelora Energi Indonesia",
     template: "%s | GRIND"
   },
-  description:
-    "GRIND (PT Gelora Energi Indonesia) adalah penyelenggara acara sportainment: produksi kreatif, manajemen venue, publikasi media, live score, e-sertifikat, dan sponsorship.",
+  description: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment",
   applicationName: "GRIND",
   keywords: [
     "GRIND",
     "PT Gelora Energi Indonesia",
-    "EO Sportainment",
-    "Penyelenggara Acara",
-    "Manajemen Venue",
+    "Penyelenggara Acara Sportainment",
+    "Produksi Kreatif",
+    "Manajemen Tiket",
+    "Koordinasi Venue",
     "Publikasi Media",
-    "Sponsorship"
+    "Live Score",
+    "E-Sertifikat",
+    "Layanan Sponsorship"
   ],
   alternates: {
     canonical: "/"
@@ -30,9 +32,8 @@ export const metadata: Metadata = {
     locale: "id_ID",
     url: "https://www.grind.co.id",
     siteName: "GRIND",
-    title: "GRIND | EO Sportainment & Aktivasi Brand di Indonesia",
-    description:
-      "Penyelenggara acara sportainment untuk brand, komunitas, dan institusi: produksi kreatif, venue, media, live score, e-sertifikat, serta sponsorship.",
+    title: "GRIND | PT Gelora Energi Indonesia",
+    description: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment",
     images: [
       {
         url: "/logo.png",
@@ -44,9 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GRIND | EO Sportainment & Aktivasi Brand di Indonesia",
-    description:
-      "Penyelenggara acara sportainment: produksi kreatif, manajemen venue, publikasi media, live score, e-sertifikat, dan sponsorship.",
+    title: "GRIND | PT Gelora Energi Indonesia",
+    description: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment",
     images: ["/logo.png"]
   },
   robots: {

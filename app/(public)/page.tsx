@@ -7,9 +7,8 @@ import { resolveImageSrc } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "EO Sportainment & Aktivasi Brand di Indonesia",
-  description:
-    "GRIND menghadirkan layanan penyelenggaraan acara sportainment: produksi kreatif, manajemen venue, publikasi media, live score, e-sertifikat, dan sponsorship."
+  title: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment",
+  description: "PT Gelora Energi Indonesia - Penyelenggara Acara Sportainment"
 };
 
 
