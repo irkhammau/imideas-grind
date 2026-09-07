@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -20,16 +20,6 @@ model SiteSettings {
   updatedAt    DateTime @updatedAt
 }
 
-model Staff {
-  id        String   @id @default(uuid())
-  order     Int      @default(0)
-  name      String
-  position  String
-  image     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Service {
   id          String   @id @default(uuid())
   title       String
@@ -41,7 +31,7 @@ model Service {
 model Event {
   id        String         @id @default(uuid())
   eventName String
-  logo      String
+  logo      String         @db.VarChar(2048)
   location  String
   date      DateTime
   galleries EventGallery[]
@@ -52,7 +42,7 @@ model Event {
 model EventGallery {
   id        String   @id @default(uuid())
   eventId   String
-  imageUrl  String
+  imageUrl  String   @db.VarChar(2048)
   caption   String?
   createdAt DateTime @default(now())
 
@@ -63,7 +53,7 @@ model EventGallery {
 
 model GlobalGallery {
   id         String   @id @default(uuid())
-  imageUrl   String
+  imageUrl   String   @db.VarChar(2048)
   caption    String?
   uploadedAt DateTime @default(now())
 }
@@ -72,7 +62,7 @@ model Partner {
   id          String   @id @default(uuid())
   order       Int      @default(0)
   name        String
-  logo        String
+  logo        String   @db.VarChar(2048)
   websiteUrl  String
   description String?  @db.Text
   createdAt   DateTime @default(now())

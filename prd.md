@@ -6,7 +6,7 @@ Berikut adalah **Product Requirements Document (PRD)** komprehensif untuk websit
 
 ## **1. Ringkasan Proyek**
 
-Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), sebuah perusahaan Event Organizer (EO) dan *Sportainment*. Website ini bersifat *data-driven*, di mana seluruh konten—mulai dari teks, logo, susunan direksi, hingga galeri *event*—disimpan di *database* dan dapat diubah sepenuhnya melalui *dashboard* Admin (CMS).
+Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), sebuah perusahaan Event Organizer (EO) dan *Sportainment*. Website ini bersifat *data-driven*, di mana teks, logo, layanan, mitra, dan galeri *event* disimpan di *database* dan dapat diubah melalui *dashboard* Admin (CMS).
 
 ## **2. Estetika & Panduan Visual (UI/UX)**
 
@@ -18,7 +18,7 @@ Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), se
 
 
 * **Animasi:** Menggunakan Framer Motion dengan gaya *subtle* dan profesional. Transisi halaman menggunakan *fade-in*, teks muncul dengan *staggered slide-up*, dan *card event* memiliki efek *hover scale* ringan. Hindari animasi berputar atau memantul yang berlebihan agar identitas korporat tetap terjaga.
-* **Panduan Komposisi Gambar (Staff & Galeri):** Modul unggah foto pada CMS harus dilengkapi dengan panduan atau fitur *auto-crop* untuk mengisolasi subjek utama dan melakukan *zoom* secara proporsional agar figur di dalam foto tidak terlihat terlalu jauh. Pada antarmuka publik, pastikan desain *overlay* teks, ornamen grafis, atau elemen dekoratif (seperti bentuk geometris) diposisikan murni di latar belakang dan sama sekali tidak menutupi subjek utama pada foto *staff* maupun *event*.
+* **Panduan Komposisi Gambar:** Modul unggah foto pada CMS harus dilengkapi dengan panduan atau fitur *auto-crop* untuk mengisolasi subjek utama dan melakukan *zoom* secara proporsional. Pada antarmuka publik, pastikan desain *overlay* teks atau elemen dekoratif tidak menutupi subjek utama pada foto *event* maupun galeri.
 
 ## **3. Arsitektur & Tech Stack**
 
@@ -27,7 +27,7 @@ Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), se
 * **Database:** PostgreSQL atau MySQL.
 * **ORM:** Prisma atau Sequelize untuk memudahkan manipulasi skema *database*.
 * **Authentication:** JSON Web Token (JWT) dikombinasikan dengan *bcrypt* untuk mengamankan akses panel admin.
-* **Storage:** Multer + sistem *file storage* lokal (atau S3 bucket) untuk menyimpan aset gambar logo dan galeri.
+* **Storage:** Cloudflare R2 melalui API S3-compatible dengan custom domain/CDN publik untuk menyimpan aset gambar logo dan galeri.
 * **Deployment:** Infrastruktur dan basis data disiapkan dalam *container* (Docker) atau menggunakan PM2, di-*deploy* langsung pada **VPS** produksi.
 
 ## **4. Fitur Utama**
@@ -35,7 +35,7 @@ Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), se
 ### **A. Public Facing Website**
 
 * Merender informasi secara dinamis dari *database*.
-* **Halaman/Seksi Utama:** Hero (Slogan & Latar Belakang), About (Visi & Fokus), Services (Sistem, Sertifikat, Merchandise), Team (Direksi), dan Contact.
+* **Halaman/Seksi Utama:** Hero (Slogan & Latar Belakang), About (Visi & Fokus), Services (Sistem, Sertifikat, Merchandise), Partners, dan Contact.
 * **Fitur Baru - Event Portfolio:** Menampilkan daftar acara yang pernah bekerjasama. Berisi logo *event*, informasi singkat (lokasi, tanggal), dan *carousel* galeri foto spesifik untuk *event* tersebut.
 
 ### **B. Admin Dashboard (CMS)**
@@ -43,7 +43,6 @@ Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), se
 * **Secure Login:** Hanya dapat diakses melalui rute `/admin` dengan kredensial yang valid.
 * **Global Settings Management:** Mengubah nama perusahaan, *motto/tagline*, logo utama situs, favicon, dan pengaturan SEO.
 * **Content Management:** Editor teks (menggunakan *Rich Text Editor* seperti TipTap atau Quill) untuk mengubah isi profil perusahaan, visi, dan deskripsi layanan.
-* **Staff Management (CRUD):** Menambah, mengedit, dan menghapus profil jajaran direksi (Foto, Nama, Jabatan).
 * **Event Management (CRUD):**
 * Membuat entri *event* baru.
 * Mengunggah logo *event*.
@@ -54,7 +53,7 @@ Membangun *company profile* dinamis untuk PT GELORA ENERGI INDONESIA (GRIND), se
 * **Database:** PostgreSQL atau MySQL.
 * **ORM:** Prisma atau Drizzle ORM (sangat direkomendasikan karena integrasinya yang mulus dengan Next.js dan *type-safety* yang ketat).
 * **Authentication:** **NextAuth.js (Auth.js)** atau implementasi JWT menggunakan *library* `jose` untuk menangani sesi *login* Admin secara aman di dalam ekosistem Next.js.
-* **Storage:** Penyimpanan *file* lokal di dalam folder `public/uploads` menggunakan API standar Next.js, atau dihubungkan ke layanan *cloud storage* (seperti AWS S3 atau Vercel Blob) untuk menyimpan foto profil *staff* dan galeri.
+* **Storage:** Cloudflare R2 melalui API S3-compatible untuk menyimpan logo dan galeri. URL yang disimpan di database menggunakan domain publik CDN R2.
 * **Deployment:** VPS (menggunakan Docker atau PM2), cukup menjalankan perintah `npm run build` dan `npm run start` untuk satu aplikasi utuh.
 
 * **Contact & Footer Management:** Memperbarui alamat, email, nomor WhatsApp, dan tautan sosial media.
@@ -93,13 +92,6 @@ Agar agen AI Anda dapat langsung membangun dan mengisi *database*, berikut adala
 * [3] `title`: "Merchandise", `description`: "Free Merchandise di setiap Kejuaraan"
 * [4] `title`: "Website Kejuaraan", `description`: "website Kejuaraan www.simpbti.id"
 
-**Tabel `Staff**`
-
-* [1] `name`: "Ir. Emmanuel Pinayungan", `position`: "Direktur Utama"
-* [2] `name`: "Ongko Leksono", `position`: "Direktur Keuangan"
-* [3] `name`: "Felix Erman Yudi", `position`: "Direktur Marketing dan Development"
-* [4] `name`: "Krisna Murtian Utama Jati", `position`: "Direktur Operasional dan Human Resource"
-
 **Tabel `Events` (Contoh Struktur)**
 
 * `id`: UUID
@@ -136,4 +128,4 @@ Agar agen AI Anda dapat langsung membangun dan mengisi *database*, berikut adala
 
 **Instruksi untuk AI Agent:**
 
-> *"Tolong buatkan aplikasi fullstack. Gunakan Node.js Express.js untuk backend API, dan Next.js App Router dengan Tailwind CSS untuk frontend dan admin panel. Buat database PostgreSQL dengan ORM. Implementasikan JWT login untuk admin. Buat tabel dan API endpoints untuk SiteSettings, Staff, Services, Events, dan EventGalleries. Desain frontend menggunakan background warna hitam (dark theme), teks putih, dengan aksen warna merah dan biru muda sesuai logo GRIND. Buatkan animasi Framer Motion yang profesional dan tidak berlebihan. Gunakan data JSON dari PRD ini sebagai seeder database. Siapkan juga environment variables dan script docker/PM2 untuk deployment ke VPS."*
+> *"Tolong buatkan aplikasi fullstack. Gunakan Next.js App Router dengan Tailwind CSS untuk frontend dan admin panel. Buat database MySQL dengan Prisma ORM. Implementasikan NextAuth untuk login admin. Buat tabel dan API endpoints untuk SiteSettings, Services, Partners, Events, EventGalleries, dan GlobalGallery. Gunakan Cloudflare R2 sebagai image storage dan simpan URL CDN publik di database. Desain frontend menggunakan background warna hitam (dark theme), teks putih, dengan aksen warna merah dan biru muda sesuai logo GRIND. Buatkan animasi Framer Motion yang profesional dan tidak berlebihan. Gunakan data JSON dari PRD ini sebagai seeder database. Siapkan juga environment variables dan script Docker/PM2 untuk deployment ke VPS."*

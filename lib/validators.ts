@@ -11,13 +11,6 @@ export const siteSettingsSchema = z.object({
   instagramUrl: z.string().url()
 });
 
-export const staffSchema = z.object({
-  order: z.coerce.number().int().min(0),
-  name: z.string().min(2),
-  position: z.string().min(2),
-  image: z.string().min(1)
-});
-
 export const serviceSchema = z.object({
   title: z.string().min(2),
   description: z.string().min(8)

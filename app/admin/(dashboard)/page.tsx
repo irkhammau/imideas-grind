@@ -4,8 +4,7 @@ export const dynamic = "force-dynamic";
 
 
 export default async function AdminOverviewPage() {
-  const [staffCount, servicesCount, partnersCount, eventsCount, globalGalleryCount, userCount] = await Promise.all([
-    prisma.staff.count(),
+  const [servicesCount, partnersCount, eventsCount, globalGalleryCount, userCount] = await Promise.all([
     prisma.service.count(),
     prisma.partner.count(),
     prisma.event.count(),
@@ -14,7 +13,6 @@ export default async function AdminOverviewPage() {
   ]);
 
   const cards = [
-    { label: "Staf", value: staffCount },
     { label: "Layanan", value: servicesCount },
     { label: "Mitra", value: partnersCount },
     { label: "Acara", value: eventsCount },

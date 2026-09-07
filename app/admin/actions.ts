@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { removePublicUpload, saveImageFromFormData } from "@/lib/upload";
+import { removeStoredImage, saveImageFromFormData } from "@/lib/upload";
 
 async function assertAuth() {
   const session = await getServerSession(authOptions);
@@ -123,74 +123,6 @@ export async function updateSiteSettingsAction(formData: FormData) {
   });
 }
 
-export async function createStaffAction(formData: FormData) {
-  await assertAuth();
-  await runMutationWithToast({
-    fallbackPath: "/admin/staff",
-    successMessage: "Staf berhasil ditambahkan.",
-    mutation: async () => {
-      const image = await saveImageFromFormData(formData, "imageFile", true);
-      const order = Number(formData.get("order") ?? 0);
-
-      await prisma.staff.create({
-        data: {
-          order: Number.isNaN(order) ? 0 : order,
-          name: String(formData.get("name") ?? ""),
-          position: String(formData.get("position") ?? ""),
-          image: image ?? ""
-        }
-      });
-
-      revalidateAll();
-    }
-  });
-}
-
-export async function updateStaffAction(formData: FormData) {
-  await assertAuth();
-  await runMutationWithToast({
-    fallbackPath: "/admin/staff",
-    successMessage: "Staf berhasil diperbarui.",
-    mutation: async () => {
-      const existingImage = String(formData.get("existingImage") ?? "");
-      const uploadedImage = await saveImageFromFormData(formData, "imageFile");
-      const image = uploadedImage ?? existingImage;
-      const order = Number(formData.get("order") ?? 0);
-
-      await prisma.staff.update({
-        where: { id: String(formData.get("id")) },
-        data: {
-          order: Number.isNaN(order) ? 0 : order,
-          name: String(formData.get("name") ?? ""),
-          position: String(formData.get("position") ?? ""),
-          image
-        }
-      });
-
-      if (uploadedImage && existingImage && uploadedImage !== existingImage) {
-        await removePublicUpload(existingImage);
-      }
-
-      revalidateAll();
-    }
-  });
-}
-
-export async function deleteStaffAction(formData: FormData) {
-  await assertAuth();
-  await runMutationWithToast({
-    fallbackPath: "/admin/staff",
-    successMessage: "Staf berhasil dihapus.",
-    mutation: async () => {
-      const deleted = await prisma.staff.delete({
-        where: { id: String(formData.get("id")) }
-      });
-      await removePublicUpload(deleted.image);
-      revalidateAll();
-    }
-  });
-}
-
 export async function createServiceAction(formData: FormData) {
   await assertAuth();
   await runMutationWithToast({
@@ -283,7 +215,7 @@ export async function updateEventAction(formData: FormData) {
       });
 
       if (uploadedLogo && existingLogo && uploadedLogo !== existingLogo) {
-        await removePublicUpload(existingLogo);
+        await removeStoredImage(existingLogo);
       }
 
       revalidateAll();
@@ -305,8 +237,8 @@ export async function deleteEventAction(formData: FormData) {
 
       if (event) {
         await prisma.event.delete({ where: { id } });
-        await removePublicUpload(event.logo);
-        await Promise.all(event.galleries.map((gallery) => removePublicUpload(gallery.imageUrl)));
+        await removeStoredImage(event.logo);
+        await Promise.all(event.galleries.map((gallery) => removeStoredImage(gallery.imageUrl)));
       }
 
       revalidateAll();
@@ -344,7 +276,7 @@ export async function deleteEventGalleryAction(formData: FormData) {
       const deleted = await prisma.eventGallery.delete({
         where: { id: String(formData.get("id")) }
       });
-      await removePublicUpload(deleted.imageUrl);
+      await removeStoredImage(deleted.imageUrl);
       revalidateAll();
     }
   });
@@ -389,7 +321,7 @@ export async function updateGlobalGalleryAction(formData: FormData) {
       });
 
       if (uploadedImageUrl && existingImageUrl && uploadedImageUrl !== existingImageUrl) {
-        await removePublicUpload(existingImageUrl);
+        await removeStoredImage(existingImageUrl);
       }
 
       revalidateAll();
@@ -406,7 +338,7 @@ export async function deleteGlobalGalleryAction(formData: FormData) {
       const deleted = await prisma.globalGallery.delete({
         where: { id: String(formData.get("id")) }
       });
-      await removePublicUpload(deleted.imageUrl);
+      await removeStoredImage(deleted.imageUrl);
       revalidateAll();
     }
   });
@@ -459,7 +391,7 @@ export async function updatePartnerAction(formData: FormData) {
       });
 
       if (uploadedLogo && existingLogo && uploadedLogo !== existingLogo) {
-        await removePublicUpload(existingLogo);
+        await removeStoredImage(existingLogo);
       }
 
       revalidateAll();
@@ -476,7 +408,7 @@ export async function deletePartnerAction(formData: FormData) {
       const deleted = await prisma.partner.delete({
         where: { id: String(formData.get("id")) }
       });
-      await removePublicUpload(deleted.logo);
+      await removeStoredImage(deleted.logo);
       revalidateAll();
     }
   });

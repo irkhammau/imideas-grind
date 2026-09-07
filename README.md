@@ -8,14 +8,15 @@ Aplikasi fullstack company profile dan CMS untuk PT GELORA ENERGI INDONESIA (GRI
 - Next.js Route Handlers + Server Actions
 - MySQL + Prisma ORM
 - NextAuth.js Credentials Provider
+- Cloudflare R2 (S3-compatible image storage + public CDN)
 - Tailwind CSS + Framer Motion
 
 ## Fitur Utama
 
-- Public website: Hero, About, Services, Staff, Event Portfolio, Galeri Perusahaan, Contact
-- CMS `/admin`: login admin + CRUD Site Settings, Staff, Services, Events, Event Galleries, Galeri Perusahaan, Users
+- Public website: Hero, About, Services, Event Portfolio, Galeri Perusahaan, Contact
+- CMS `/admin`: login admin + CRUD Site Settings, Services, Partners, Events, Event Galleries, Galeri Perusahaan, Users
 - Tema dark dengan aksen merah dan cyan sesuai PRD
-- Struktur galeri/staff memakai crop `object-cover` + zoom proporsional (`scale-110`) dan teks diletakkan di luar area subjek gambar
+- Struktur galeri memakai crop `object-cover` + zoom proporsional (`scale-110`) dan teks diletakkan di luar area subjek gambar
 
 ## Setup Lokal
 
@@ -57,7 +58,14 @@ Akses:
 DATABASE_URL="mysql://root:root@localhost:3306/grind_db"
 NEXTAUTH_SECRET="isi-random-string-panjang"
 NEXTAUTH_URL="http://localhost:3000"
+R2_ACCOUNT_ID="cloudflare-account-id"
+R2_ACCESS_KEY_ID="r2-api-token-access-key-id"
+R2_SECRET_ACCESS_KEY="r2-api-token-secret-access-key"
+R2_BUCKET_NAME="nama-bucket"
+R2_PUBLIC_URL="https://cdn.example.com"
 ```
+
+`R2_PUBLIC_URL` harus menunjuk ke custom domain bucket atau URL publik R2 dan tidak memakai trailing slash. Token R2 memerlukan izin baca/tulis object pada bucket tersebut.
 
 ## Deploy dengan Docker Compose (VPS)
 
@@ -96,7 +104,6 @@ pm2 startup
 ## Struktur Endpoint API (Route Handlers)
 
 - `GET/PUT /api/site-settings`
-- `GET/POST /api/staff`, `GET/PUT/DELETE /api/staff/:id`
 - `GET/POST /api/services`, `GET/PUT/DELETE /api/services/:id`
 - `GET/POST /api/events`, `GET/PUT/DELETE /api/events/:id`
 - `GET/POST /api/events/:id/galleries`

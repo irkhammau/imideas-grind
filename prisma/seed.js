@@ -16,19 +16,6 @@ const serviceData = [
   { title: "Layanan Sponsorship", description: "Aktivasi sponsor dan integrasi brand selama rangkaian acara." }
 ];
 
-const staffData = [
-  { order: 1, name: "Ir. Emmanuel Pinayungan", position: "Direktur Utama", image: "/default.png" },
-  { order: 2, name: "Ongko Leksono", position: "Direktur Keuangan", image: "/default.png" },
-  { order: 3, name: "Felix Erman Yudi", position: "Direktur Marketing dan Development", image: "/default.png" },
-  { order: 4, name: "Krisna Murtian Utama Jati", position: "Direktur Operasional dan Human Resource", image: "/default.png" },
-  { order: 5, name: "Rafi Ananta", position: "Head of Event Strategy", image: "/default.png" },
-  { order: 6, name: "Nabila Prameswari", position: "Head of Creative Production", image: "/default.png" },
-  { order: 7, name: "Dimas Saputra", position: "Event Technology Manager", image: "/default.png" },
-  { order: 8, name: "Alya Maharani", position: "Community Partnership Lead", image: "/default.png" },
-  { order: 9, name: "Rizky Febrianto", position: "Tournament Operations Lead", image: "/default.png" },
-  { order: 10, name: "Sinta Puspita", position: "Public Relations Manager", image: "/default.png" }
-];
-
 const partnerData = [
   { order: 1, name: "IMIdeas", logo: "/default.png", websiteUrl: "https://grind.co.id", description: "Strategic creative and digital solutions partner." },
   { order: 2, name: "GRIND Indonesia", logo: "/default.png", websiteUrl: "https://grind.co.id", description: "Sportainment execution and event operations partner." },
@@ -60,7 +47,6 @@ async function main() {
   await prisma.event.deleteMany();
   await prisma.globalGallery.deleteMany();
   await prisma.partner.deleteMany();
-  await prisma.staff.deleteMany();
   await prisma.service.deleteMany();
   await prisma.user.deleteMany();
   await prisma.siteSettings.deleteMany();
@@ -83,7 +69,6 @@ async function main() {
   });
 
   await prisma.service.createMany({ data: serviceData });
-  await prisma.staff.createMany({ data: staffData });
   await prisma.partner.createMany({ data: partnerData });
 
   for (const item of eventData) {

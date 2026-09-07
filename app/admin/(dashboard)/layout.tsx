@@ -10,7 +10,6 @@ export const dynamic = "force-dynamic";
 const navItems = [
   { href: "/admin", label: "Ringkasan" },
   { href: "/admin/site-settings", label: "Pengaturan Situs" },
-  { href: "/admin/staff", label: "Staf" },
   { href: "/admin/services", label: "Layanan" },
   { href: "/admin/partners", label: "Mitra" },
   { href: "/admin/events", label: "Acara" },

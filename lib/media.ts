@@ -1,13 +1,23 @@
 export function resolveImageSrc(src: string) {
-  if (!src) return src;
+  const normalizedSrc = src.trim();
+  if (!normalizedSrc) return normalizedSrc;
 
-  if (src.startsWith("/api/uploads/")) {
-    return src;
+  if (normalizedSrc.startsWith("/api/uploads/")) {
+    return normalizedSrc;
   }
 
-  if (src.startsWith("/uploads/")) {
-    return `/api/uploads/${src.replace(/^\/uploads\//, "")}`;
+  if (normalizedSrc.startsWith("/uploads/")) {
+    return `/api/uploads/${normalizedSrc.replace(/^\/uploads\//, "")}`;
   }
 
-  return src;
+  if (normalizedSrc.startsWith("//")) {
+    return `https:${normalizedSrc}`;
+  }
+
+  // Repair legacy CDN URLs saved as "cdn.example.com/path" without a scheme.
+  if (/^[a-z0-9.-]+\.[a-z]{2,}(?::\d+)?(?:\/|$)/i.test(normalizedSrc)) {
+    return `https://${normalizedSrc}`;
+  }
+
+  return normalizedSrc;
 }

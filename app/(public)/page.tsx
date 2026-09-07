@@ -13,9 +13,8 @@ export const metadata: Metadata = {
 
 
 export default async function HomePage() {
-  const [settings, staff, services, partners, featuredEvents] = await Promise.all([
+  const [settings, services, partners, featuredEvents] = await Promise.all([
     prisma.siteSettings.findFirst({ orderBy: { createdAt: "asc" } }),
-    prisma.staff.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }),
     prisma.service.findMany({ orderBy: { createdAt: "asc" } }),
     prisma.partner.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }),
     prisma.event.findMany({ orderBy: { date: "desc" }, take: 3, include: { galleries: true } })
@@ -78,36 +77,6 @@ export default async function HomePage() {
                 <article className="flex h-full min-h-[198px] flex-col rounded-2xl border border-grind-line bg-grind-surface p-6">
                   <h3 className="min-h-[64px] font-heading text-xl text-white">{service.title}</h3>
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-zinc-300">{service.description}</p>
-                </article>
-              </HoverCard>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      <section id="team" className="section-container py-14">
-        <FadeIn>
-          <h2 className="font-heading text-3xl md:text-4xl">Jajaran Staf</h2>
-        </FadeIn>
-        <div className="mt-8 grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {staff.map((member, idx) => (
-            <FadeIn key={member.id} delay={idx * 0.05} className="h-full">
-              <HoverCard className="h-full">
-                <article className="flex h-full flex-col rounded-2xl border border-grind-line bg-grind-surface p-4">
-                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-black">
-                    <Image
-                      src={resolveImageSrc(member.image)}
-                      alt={member.name}
-                      fill
-                      unoptimized
-                      className="object-cover object-center scale-110"
-                      sizes="(max-width: 768px) 100vw, 25vw"
-                    />
-                  </div>
-                  <div className="min-h-[64px] pt-4">
-                    <p className="font-semibold text-white">{member.name}</p>
-                    <p className="text-sm text-grind-cyan">{member.position}</p>
-                  </div>
                 </article>
               </HoverCard>
             </FadeIn>

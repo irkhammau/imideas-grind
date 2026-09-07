@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { unlink } from "node:fs/promises";
 import path from "node:path";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
@@ -9,13 +10,62 @@ const MIME_EXTENSION: Record<string, string> = {
   "image/png": ".png",
   "image/webp": ".webp",
   "image/gif": ".gif",
-  "image/svg+xml": ".svg"
+  "image/svg+xml": ".svg",
+  "image/avif": ".avif"
 };
 
-function resolveExtension(file: File) {
-  const extFromName = path.extname(file.name || "").toLowerCase();
-  if (extFromName) return extFromName;
-  return MIME_EXTENSION[file.type] ?? ".bin";
+type R2Config = {
+  bucket: string;
+  publicUrl: string;
+  client: S3Client;
+};
+
+let cachedConfig: R2Config | undefined;
+
+function normalizePublicUrl(value: string) {
+  const withProtocol = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+
+  try {
+    const url = new URL(withProtocol);
+    if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error();
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    throw new Error("R2_PUBLIC_URL harus berupa URL atau domain CDN yang valid.");
+  }
+}
+
+function getR2Config(): R2Config {
+  if (cachedConfig) return cachedConfig;
+
+  const accountId = process.env.R2_ACCOUNT_ID;
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+  const bucket = process.env.R2_BUCKET_NAME;
+  const publicUrlValue = process.env.R2_PUBLIC_URL?.trim();
+
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucket || !publicUrlValue) {
+    throw new Error(
+      "Konfigurasi R2 belum lengkap. Isi R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, dan R2_PUBLIC_URL."
+    );
+  }
+
+  const publicUrl = normalizePublicUrl(publicUrlValue);
+
+  cachedConfig = {
+    bucket,
+    publicUrl,
+    client: new S3Client({
+      region: "auto",
+      endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+      credentials: { accessKeyId, secretAccessKey }
+    })
+  };
+
+  return cachedConfig;
+}
+
+function encodeObjectKey(key: string) {
+  return key.split("/").map(encodeURIComponent).join("/");
 }
 
 export async function saveImageFromFormData(
@@ -37,40 +87,61 @@ export async function saveImageFromFormData(
     return null;
   }
 
-  if (!file.type.startsWith("image/")) {
-    throw new Error("Hanya file gambar yang diperbolehkan");
+  const extension = MIME_EXTENSION[file.type];
+  if (!extension) {
+    throw new Error("Format gambar harus JPG, PNG, WebP, GIF, SVG, atau AVIF");
   }
 
   if (file.size > MAX_IMAGE_BYTES) {
     throw new Error("Ukuran gambar maksimal 5MB");
   }
 
-  const fileName = `${Date.now()}-${randomUUID()}${resolveExtension(file)}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  const diskPath = path.join(uploadDir, fileName);
+  const config = getR2Config();
+  const objectKey = `uploads/${Date.now()}-${randomUUID()}${extension}`;
+  const body = Buffer.from(await file.arrayBuffer());
 
-  await mkdir(uploadDir, { recursive: true });
+  await config.client.send(
+    new PutObjectCommand({
+      Bucket: config.bucket,
+      Key: objectKey,
+      Body: body,
+      ContentType: file.type,
+      CacheControl: "public, max-age=31536000, immutable"
+    })
+  );
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  await writeFile(diskPath, buffer);
-
-  return `/api/uploads/${fileName}`;
+  return `${config.publicUrl}/${encodeObjectKey(objectKey)}`;
 }
 
-export async function removePublicUpload(filePath?: string | null) {
-  if (!filePath) return;
+export async function removeStoredImage(fileUrl?: string | null) {
+  if (!fileUrl) return;
 
-  let relativePath = "";
-  if (filePath.startsWith("/uploads/")) {
-    relativePath = filePath.replace(/^\//, "");
-  } else if (filePath.startsWith("/api/uploads/")) {
-    relativePath = `uploads/${filePath.replace(/^\/api\/uploads\//, "")}`;
-  } else {
+  // Keep cleanup support for records created before the R2 migration.
+  if (fileUrl.startsWith("/uploads/") || fileUrl.startsWith("/api/uploads/")) {
+    const fileName = fileUrl.replace(/^\/(?:api\/)?uploads\//, "");
+    const uploadDir = path.resolve(process.cwd(), "public", "uploads");
+    const diskPath = path.resolve(uploadDir, fileName);
+
+    if (diskPath.startsWith(`${uploadDir}${path.sep}`)) {
+      await unlink(diskPath).catch(() => undefined);
+    }
     return;
   }
 
-  const diskPath = path.join(process.cwd(), "public", relativePath);
-  await unlink(diskPath).catch(() => undefined);
+  if (fileUrl.startsWith("/")) return;
+
+  const config = getR2Config();
+  const normalizedFileUrl = /^https?:\/\//i.test(fileUrl) ? fileUrl : `https://${fileUrl}`;
+  const publicPrefix = `${config.publicUrl}/`;
+  if (!normalizedFileUrl.startsWith(publicPrefix)) return;
+
+  const objectKey = decodeURIComponent(normalizedFileUrl.slice(publicPrefix.length));
+  if (!objectKey.startsWith("uploads/")) return;
+
+  await config.client.send(
+    new DeleteObjectCommand({
+      Bucket: config.bucket,
+      Key: objectKey
+    })
+  );
 }
