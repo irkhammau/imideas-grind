@@ -2,13 +2,8 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME = 'imideas-grind'
-        DOCKER_IMAGE = 'imideas-grind:latest'
-        DOCKER_NETWORK = 'imideas-net'
-
-        DATABASE_URL = 'mysql://root:P%40ssw0rd@mysql-lab:3306/grind_db'
-        NEXTAUTH_URL = 'https://grind.co.id'
-        NEXTAUTH_SECRET = 'gtZoGuDkMNrAVN1tPfVDfBeu2i7+HU8th1XpC8gLOB4='
+        COMPOSE_FILE = 'docker-compose.yml'
+        COMPOSE_PROJECT_NAME = 'imideas-grind'
     }
 
     stages {
@@ -20,55 +15,71 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                    docker build -t $DOCKER_IMAGE .
-                '''
+                withCredentials([
+                    file(
+                        credentialsId: 'imideas-grind-env',
+                        variable: 'APP_ENV_FILE'
+                    )
+                ]) {
+                    sh '''
+                        docker compose build app
+                    '''
+                }
             }
         }
 
-        // stage('Run Migration') {
-        //     steps {
-        //         sh '''
-        //             docker run --rm \
-        //             --network $DOCKER_NETWORK \
-        //             -e DATABASE_URL="$DATABASE_URL" \
-        //             -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-        //             -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
-        //             $DOCKER_IMAGE \
-        //             ./node_modules/.bin/prisma migrate deploy --schema=./prisma/schema.prisma
-        //         '''
-        //     }
-        // }
-
-        // stage('Run Seed') {
-        //     steps {
-        //         sh '''
-        //             docker run --rm \
-        //             --network $DOCKER_NETWORK \
-        //             -e DATABASE_URL="$DATABASE_URL" \
-        //             -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-        //             -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
-        //             $DOCKER_IMAGE \
-        //             ./node_modules/.bin/prisma db seed --schema=./prisma/schema.prisma
-        //         '''
-        //     }
-        // }
+        stage('Run Migration') {
+            steps {
+                withCredentials([
+                    file(
+                        credentialsId: 'imideas-grind-env',
+                        variable: 'APP_ENV_FILE'
+                    )
+                ]) {
+                    sh '''
+                        docker compose run --rm --no-deps app \
+                          npx prisma migrate deploy --schema=./prisma/schema.prisma
+                    '''
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
-                sh '''
-                    docker stop $APP_NAME || true
-                    docker rm $APP_NAME || true
+                withCredentials([
+                    file(
+                        credentialsId: 'imideas-grind-env',
+                        variable: 'APP_ENV_FILE'
+                    )
+                ]) {
+                    sh '''
+                        if docker container inspect imideas-grind >/dev/null 2>&1; then
+                            if ! docker container inspect \
+                                --format '{{ index .Config.Labels "com.docker.compose.project" }}' \
+                                imideas-grind | grep -qx "$COMPOSE_PROJECT_NAME"; then
+                                echo 'Replacing the legacy non-Compose container once'
+                                docker container rm -f imideas-grind
+                            fi
+                        fi
 
-                    docker run -d \
-                    --name $APP_NAME \
-                    --restart unless-stopped \
-                    --network $DOCKER_NETWORK \
-                    -e DATABASE_URL="$DATABASE_URL" \
-                    -e NEXTAUTH_URL="$NEXTAUTH_URL" \
-                    -e NEXTAUTH_SECRET="$NEXTAUTH_SECRET" \
-                    $DOCKER_IMAGE
-                '''
+                        docker compose up -d --no-deps app
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                withCredentials([
+                    file(
+                        credentialsId: 'imideas-grind-env',
+                        variable: 'APP_ENV_FILE'
+                    )
+                ]) {
+                    sh '''
+                        docker compose ps app
+                    '''
+                }
             }
         }
 

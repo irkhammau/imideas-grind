@@ -1,13 +1,11 @@
+.env
+.env.*
+!.env.example
 node_modules
 .next
-out
-.env
-.env.local
-.env.prod
+.git
 coverage
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-.DS_Store
-prisma/dev.db

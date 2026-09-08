@@ -1,31 +1,15 @@
-version: "3.9"
-
 services:
-  db:
-    image: mysql:8.4
-    container_name: grind-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: grind_db
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - "3306:3306"
-    volumes:
-      - grind_mysql_data:/var/lib/mysql
-
   app:
-    build: .
-    container_name: grind-next
+    build:
+      context: .
+    image: imideas-grind:latest
+    container_name: imideas-grind
     restart: unless-stopped
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: mysql://root:root@db:3306/grind_db
-      NEXTAUTH_SECRET: change-this-to-long-random-secret
-      NEXTAUTH_URL: http://localhost:3000
-    ports:
-      - "3000:3000"
-    command: sh -c "npx prisma migrate deploy && npm run start"
+    env_file:
+      - ${APP_ENV_FILE:?APP_ENV_FILE must point to the Jenkins secret file}
+    networks:
+      - imideas-net
 
-volumes:
-  grind_mysql_data:
+networks:
+  imideas-net:
+    external: true
